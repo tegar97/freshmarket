@@ -35,9 +35,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _loadUserData() async {
+    
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var user = jsonDecode(localStorage.getString('user')!);
-
+    print(localStorage.getString('token')!);
     if (user != null) {
       setState(() {
         name = user['name'];
@@ -96,10 +97,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      Icon(
-                        Icons.location_pin,
-                        color: primaryColor,
-                        size: 25,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/address');
+                        },
+                        child: Icon(
+                          Icons.location_pin,
+                          color: primaryColor,
+                          size: 25,
+                        ),
                       ),
                     ],
                   ),
@@ -235,14 +241,18 @@ class ProductContainer extends StatelessWidget {
 
   final double widthDevice;
   final ProductModels product;
+  
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => ProductDetailScreen(
-                      product: product,)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ProductDetailScreen(
+                      product: product,
+                    )));
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 22, horizontal: 16),

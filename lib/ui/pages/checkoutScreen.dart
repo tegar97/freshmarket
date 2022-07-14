@@ -1,15 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:freshmarket/models/addressModels.dart';
+import 'package:freshmarket/models/cartModels.dart';
+import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/ui/home/theme.dart';
+import 'package:intl/intl.dart';
+import 'package:freshmarket/helper/convertRupiah.dart';
+import 'package:freshmarket/data/setting/url.dart';
+import 'package:provider/provider.dart';
 
-class CheckOutScreen extends StatelessWidget {
-  const CheckOutScreen({Key? key}) : super(key: key);
+class CheckOutScreen extends StatefulWidget {
+  CheckOutScreen({Key? key, this.carts}) : super(key: key);
+  List<CartModels>? carts;
+
+  @override
+  State<CheckOutScreen> createState() => _CheckOutScreenState();
+}
+
+class _CheckOutScreenState extends State<CheckOutScreen> {
+  final Future<String> delay = Future<String>.delayed(
+    const Duration(seconds: 2),
+    () => 'Data Loaded',
+  );
+  @override
+  void initState() {
+    super.initState();
+    getInit();
+  }
+
+  getInit() async {
+    await Provider.of<AddressProvider>(context, listen: false).getMyAddress();
+  }
+
+  final _currentDate = DateTime.now();
+
+  final _dayFormatter = DateFormat('d');
+
+  final _dayFormatterEng = DateFormat('EEE');
+
+  final _monthFormatter = DateFormat('MMM');
+
+  int? selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-        double widthDevice = MediaQuery.of(context).size.width;
+    AddressProvider addressProvider = Provider.of<AddressProvider>(context);
+    print(addressProvider.address.city);
+    final dates = <Widget>[];
+
+    for (int i = 1; i < 5; i++) {
+      final date = _currentDate.add(Duration(days: i));
+      dates.add(Column(
+        children: [
+          Text(_dayFormatterEng.format(date), style: subtitleTextStyle),
+          SizedBox(
+            height: 3,
+          ),
+          Text(_dayFormatter.format(date),
+              style: headerTextStyle.copyWith(fontWeight: FontWeight.w600)),
+          SizedBox(
+            height: 3,
+          ),
+          Text(_monthFormatter.format(date), style: subtitleTextStyle),
+        ],
+      ));
+    }
+
+    double widthDevice = MediaQuery.of(context).size.width;
 
     return Scaffold(
-       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         width: double.infinity,
@@ -61,48 +120,74 @@ class CheckOutScreen extends StatelessWidget {
                         style: headerTextStyle.copyWith(
                             fontSize: 20, fontWeight: FontWeight.w600),
                       ),
-                      Text("Ganti", style: primaryTextStyle)
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/address');
+                          },
+                          child: Text("Ganti", style: primaryTextStyle))
                     ],
                   ),
-                  Container(
-                      width: double.infinity,
-                      margin: EdgeInsets.only(top: 20),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 13, vertical: 11),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(11),
-                          border: Border.all(
-                            color: neutral30,
-                          )),
-                      child: Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text("Tegar Akmal",
-                                  style: headerTextStyle.copyWith(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600)),
-                                      SizedBox(width: 8,),
-                              Container(
-                                width: 4,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(100)),
-                              ),
-                              SizedBox(width: 8,),
-                              Text("+62 812-1797-8079 ",style: subtitleTextStyle)
-                            ],
-                          ),
-                          SizedBox(height: 10,),
-                          Text("Jalan raya cikalang 312, kabupaten bandung , jawa barat ",style: subtitleTextStyle)
-                        ],
-                      ))
+                  FutureBuilder(
+                      future: delay,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return  addressProvider.myAddress.label == null ? Text("no data") : Container(
+                              width: double.infinity,
+                              margin: EdgeInsets.only(top: 20),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 13, vertical: 11),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(11),
+                                  border: Border.all(
+                                    color: neutral30,
+                                  )),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text("${addressProvider.myAddress.label ?? "no data"}",
+                                          style: headerTextStyle.copyWith(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600)),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Container(
+                                        width: 4,
+                                        height: 4,
+                                        decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            borderRadius:
+                                                BorderRadius.circular(100)),
+                                      ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Text(
+                                          "${addressProvider.myAddress.phoneNumber ?? "no data"} ",
+                                          style: subtitleTextStyle)
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                      "${addressProvider.myAddress.fullAddress ?? "no data"} ",
+                                      style: subtitleTextStyle)
+                                ],
+                              ));
+                        } else {
+                          return Text("Loading ...");
+                        }
+                      })
                 ],
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
               width: double.infinity,
@@ -121,69 +206,38 @@ class CheckOutScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Container(
                     width: double.infinity,
                     height: widthDevice * 0.25,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: [
-                        Container(
-                             width: widthDevice * 0.25,
-                             height: widthDevice * 0.25,
-                             margin: EdgeInsets.only(right: 10),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 13, vertical: 11),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(11),
-                              border: Border.all(
-                                color: primaryColor,
-                              )),
-                              child: Column(
-                                children: [
-                                  Text("Rabu",style: subtitleTextStyle),
-                                  SizedBox(height: 3,),
-                                  Text("26",style: headerTextStyle.copyWith(fontWeight: FontWeight.w600)),
-                                                                    SizedBox(
-                                height: 3,
-                              ),
-
-                                  Text("Juli", style: subtitleTextStyle),
-                                ],
-                              ),
-                        ),
-                        Container(
-                             width: widthDevice * 0.25,
-                             height: widthDevice * 0.25,
-                             margin: EdgeInsets.only(right: 10),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 13, vertical: 11),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(11),
-                              border: Border.all(
-                                color: neutral30,
-                              )),
-                              child: Column(
-                                children: [
-                                  Text("Kamis",style: subtitleTextStyle),
-                                  SizedBox(height: 3,),
-                                  Text("27",style: headerTextStyle.copyWith(fontWeight: FontWeight.w600)),
-                                                                    SizedBox(
-                                height: 3,
-                              ),
-
-                                  Text("Juli", style: subtitleTextStyle),
-                                ],
-                              ),
-                        ),
-                      ],
+                      children: dates.map((date) {
+                        var index = dates.indexOf(date);
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedIndex = index;
+                            });
+                          },
+                          child: DateBox(
+                            id: index,
+                            widthDevice: widthDevice,
+                            date: date,
+                            selectedIndex: selectedIndex,
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
-                 
                 ],
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
               width: double.infinity,
@@ -202,11 +256,15 @@ class CheckOutScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 30,),
-                  ProductCheckout(),
-                  ProductCheckout(),
-                  ProductCheckout(),
-                 
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Column(
+                    children: widget.carts!
+                        .map((cart) => GestureDetector(
+                            child: ProductCheckout(product: cart)))
+                        .toList(),
+                  )
                 ],
               ),
             )
@@ -217,11 +275,41 @@ class CheckOutScreen extends StatelessWidget {
   }
 }
 
+class DateBox extends StatelessWidget {
+  DateBox(
+      {Key? key,
+      required this.date,
+      required this.widthDevice,
+      required this.id,
+      this.selectedIndex})
+      : super(key: key);
+
+  final double widthDevice;
+  final Widget date;
+  int? id;
+  int? selectedIndex;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: widthDevice * 0.25,
+      height: widthDevice * 0.25,
+      margin: EdgeInsets.only(right: 10),
+      padding: EdgeInsets.symmetric(horizontal: 13, vertical: 11),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(11),
+          border: Border.all(
+            color: selectedIndex == id ? primaryColor : neutral20,
+          )),
+      child: Column(
+        children: [date],
+      ),
+    );
+  }
+}
 
 class ProductCheckout extends StatelessWidget {
-  const ProductCheckout({
-    Key? key,
-  }) : super(key: key);
+  const ProductCheckout({Key? key, required this.product}) : super(key: key);
+  final CartModels product;
 
   @override
   Widget build(BuildContext context) {
@@ -237,8 +325,8 @@ class ProductCheckout extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image.asset(
-                'assets/images/product_2.png',
+              Image.network(
+                '$baseUrl/product/${product.product!.image}',
                 width: 51,
                 height: 51,
               ),
@@ -249,13 +337,14 @@ class ProductCheckout extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Fresh Luttce",
+                    Text("${product.product!.name}",
                         style: headerTextStyle.copyWith(
                             fontSize: 15, fontWeight: FontWeight.w600)),
                     SizedBox(
                       height: 5,
                     ),
-                    Text("Berat : 1kg",
+                    Text(
+                        "Berat : ${(((product.product!.weight ?? 0).toInt() * (product.quantity ?? 0).toInt()) / 10000).toInt()} kg",
                         style: subtitleTextStyle.copyWith(fontSize: 14)),
                   ],
                 ),
@@ -263,7 +352,8 @@ class ProductCheckout extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Rp 25.000 ",
+                  Text(
+                      "${CurrencyFormat.convertToIdr(product.product!.price, 0)} ",
                       style: headerTextStyle.copyWith(
                           fontSize: 15, fontWeight: FontWeight.w600)),
                   Text(
@@ -283,12 +373,13 @@ class ProductCheckout extends StatelessWidget {
                   child: Row(
                 children: [
                   Text("Total : ", style: subtitleTextStyle),
-                  Text("Rp 50.000",
+                  Text("${CurrencyFormat.convertToIdr(product.total, 0)}",
                       style: primaryTextStyle.copyWith(
                           fontWeight: FontWeight.w600))
                 ],
               )),
-             Text("x2",style: primaryTextStyle.copyWith(fontWeight: FontWeight.w600))
+              Text("x${product.quantity}",
+                  style: primaryTextStyle.copyWith(fontWeight: FontWeight.w600))
             ],
           )
         ],

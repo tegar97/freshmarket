@@ -12,9 +12,10 @@ class CustomFormField extends StatelessWidget {
     this.validator,
     required this.state,
     required this.labelText,
+    this.maxLines=1,
     this.isSecure=false,
   }) : super(key: key);
-  
+  final int maxLines;
   final String hintText;
   final String labelText;
   final TextEditingController state;
@@ -40,6 +41,7 @@ class CustomFormField extends StatelessWidget {
             inputFormatters: inputFormatters,
             validator: validator,
             controller: state,
+            maxLines: maxLines,
             
             obscureText: isSecure ? true : false,
            decoration: InputDecoration(

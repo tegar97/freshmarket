@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/auth_providers.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
 import 'package:freshmarket/providers/category_providers.dart';
@@ -51,6 +52,9 @@ class MyApp extends StatelessWidget {
           
           ChangeNotifierProvider(
             create: (context) =>  CategoryProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) =>  AddressProvider(),
           ),
           ChangeNotifierProvider(
             create: (context) =>  CartProvider(),

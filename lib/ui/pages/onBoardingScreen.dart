@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:freshmarket/data/content/onBoarding.dart';
 import 'package:freshmarket/models/userModels.dart';
+import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/auth_providers.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:provider/provider.dart';
@@ -42,6 +41,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       }
     }
   }
+@override
+
+
 
   @override
   Widget build(BuildContext context) {

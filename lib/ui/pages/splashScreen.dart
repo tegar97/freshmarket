@@ -15,14 +15,16 @@ class SpalashScreen extends StatefulWidget {
 }
 
 class _SpalashScreenState extends State<SpalashScreen> {
+  @override
   void initState() {
-    getInit();
     super.initState();
+    getInit();
   }
 
   getInit() async {
     await Provider.of<CategoryProvider>(context, listen: false).getCategory();
     await Provider.of<ProductProvider>(context, listen: false).getProduct();
+    
     final prefs = await SharedPreferences.getInstance();
     prefs.get('token');
     print(prefs);

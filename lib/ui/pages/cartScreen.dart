@@ -3,6 +3,7 @@ import 'package:freshmarket/data/content/populer_product.dart';
 import 'package:freshmarket/models/cartModels.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
 import 'package:freshmarket/ui/home/theme.dart';
+import 'package:freshmarket/ui/pages/checkoutScreen.dart';
 import 'package:freshmarket/ui/pages/homeScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:freshmarket/data/setting/url.dart';
@@ -26,8 +27,12 @@ class CartScreen extends StatelessWidget {
         child: cartProvider.carts.length > 0
             ? FloatingActionButton.extended(
                 onPressed: () {
-                  Navigator.pushNamed(
-                      context, '/address');
+                 Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CheckOutScreen(
+                                carts: cartProvider.carts,
+                              )));
                 },
                 label: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -266,7 +271,8 @@ class CartBox extends StatelessWidget {
                     SizedBox(
                       height: 5,
                     ),
-                    Text("Berat : 1kg",
+                  Text(
+                        "Berat : ${(((cart!.product!.weight ?? 0).toInt() * (cart!.quantity ?? 0).toInt()) / 10000).toInt()} kg",
                         style: subtitleTextStyle.copyWith(fontSize: 14)),
                   ],
                 ),
