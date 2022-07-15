@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freshmarket/ui/pages/LoadPaymentScreen.dart';
 import 'package:freshmarket/ui/pages/addAddressScareen.dart';
 import 'package:freshmarket/ui/pages/addressScreen.dart';
 import 'package:freshmarket/ui/pages/cartScreen.dart';
@@ -8,6 +9,8 @@ import 'package:freshmarket/ui/pages/homeScreen.dart';
 import 'package:freshmarket/ui/pages/loginScreen.dart';
 import 'package:freshmarket/ui/pages/main_pages.dart';
 import 'package:freshmarket/ui/pages/onBoardingScreen.dart';
+import 'package:freshmarket/ui/pages/paymentCodeScreen.dart';
+import 'package:freshmarket/ui/pages/paymentListScreen.dart';
 import 'package:freshmarket/ui/pages/productDetailScreen.dart';
 import 'package:freshmarket/ui/pages/registerScreen.dart';
 import 'package:freshmarket/ui/pages/splashScreen.dart';
@@ -40,6 +43,12 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => CheckOutScreen());
       case '/category-product':
         return MaterialPageRoute(builder: (_) => CategoryProduct());
+      case '/payment-list':
+        return MaterialPageRoute(builder: (_) => PaymentListScreen());
+      case '/load-payment':
+        return MaterialPageRoute(builder: (_) => LoadPaymentScreen());
+      case '/payment-code':
+        return MaterialPageRoute(builder: (_) => PaymentCodeScreen());
    
 
       default:

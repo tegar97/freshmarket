@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:freshmarket/models/addressModels.dart';
 import 'package:freshmarket/models/cartModels.dart';
 import 'package:freshmarket/providers/address_providers.dart';
+import 'package:freshmarket/providers/cart_providers.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:freshmarket/helper/convertRupiah.dart';
@@ -44,6 +45,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   @override
   Widget build(BuildContext context) {
     AddressProvider addressProvider = Provider.of<AddressProvider>(context);
+    CartProvider cart = Provider.of<CartProvider>(context);
     print(addressProvider.address.city);
     final dates = <Widget>[];
 
@@ -74,7 +76,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
         width: double.infinity,
         child: FloatingActionButton.extended(
           onPressed: () {
-            Navigator.pushNamed(context, '/cart');
+            Navigator.pushNamed(context, '/payment-list');
           },
           label: Text('Bayar'),
           backgroundColor: primaryColor,
@@ -131,53 +133,56 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       future: delay,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
-                          return  addressProvider.myAddress.label == null ? Text("no data") : Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.only(top: 20),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 13, vertical: 11),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(11),
-                                  border: Border.all(
-                                    color: neutral30,
-                                  )),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                          return addressProvider.myAddress.label == null
+                              ? Text("no data")
+                              : Container(
+                                  width: double.infinity,
+                                  margin: EdgeInsets.only(top: 20),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 13, vertical: 11),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(11),
+                                      border: Border.all(
+                                        color: neutral30,
+                                      )),
+                                  child: Column(
                                     children: [
-                                      Text("${addressProvider.myAddress.label ?? "no data"}",
-                                          style: headerTextStyle.copyWith(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w600)),
-                                      SizedBox(
-                                        width: 8,
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                              "${addressProvider.myAddress.label ?? "no data"}",
+                                              style: headerTextStyle.copyWith(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600)),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Container(
+                                            width: 4,
+                                            height: 4,
+                                            decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                borderRadius:
+                                                    BorderRadius.circular(100)),
+                                          ),
+                                          SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(
+                                              "${addressProvider.myAddress.phoneNumber ?? "no data"} ",
+                                              style: subtitleTextStyle)
+                                        ],
                                       ),
-                                      Container(
-                                        width: 4,
-                                        height: 4,
-                                        decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius:
-                                                BorderRadius.circular(100)),
-                                      ),
                                       SizedBox(
-                                        width: 8,
+                                        height: 10,
                                       ),
                                       Text(
-                                          "${addressProvider.myAddress.phoneNumber ?? "no data"} ",
+                                          "${addressProvider.myAddress.fullAddress ?? "no data"} ",
                                           style: subtitleTextStyle)
                                     ],
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                      "${addressProvider.myAddress.fullAddress ?? "no data"} ",
-                                      style: subtitleTextStyle)
-                                ],
-                              ));
+                                  ));
                         } else {
                           return Text("Loading ...");
                         }
@@ -206,11 +211,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 30,),
+                  SizedBox(
+                    height: 30,
+                  ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        Column(
+                      Column(
                         children: [
                           Image.asset('assets/images/icon_store_location.png',
                               width: 40),
@@ -224,7 +231,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           )
                         ],
                       ),
-                        SizedBox(
+                      SizedBox(
                         width: 12,
                       ),
                       Column(
@@ -233,14 +240,15 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           Text('Outlet terdekat',
                               style: headerTextStyle.copyWith(
                                   fontSize: 14, fontWeight: FontWeight.w600)),
-                                  SizedBox(height: 3,),
+                          SizedBox(
+                            height: 3,
+                          ),
                           Text('Freshmarket cileunyi',
-                              style: subtitleTextStyle.copyWith(
-                                 )),
+                              style: subtitleTextStyle.copyWith()),
                           SizedBox(
                             height: 35,
                           ),
-                         Text('Lokasi Kamu',
+                          Text('Lokasi Kamu',
                               style: headerTextStyle.copyWith(
                                   fontSize: 14, fontWeight: FontWeight.w600)),
                           SizedBox(
@@ -250,13 +258,12 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               style: subtitleTextStyle.copyWith()),
                         ],
                       ),
-                   
                     ],
                   )
                 ],
               ),
             ),
-               SizedBox(
+            SizedBox(
               height: 20,
             ),
             Container(
@@ -309,7 +316,6 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             SizedBox(
               height: 20,
             ),
-           
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
               width: double.infinity,
@@ -340,10 +346,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 ],
               ),
             ),
-             SizedBox(
+            SizedBox(
               height: 20,
             ),
-             Container(
+            Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
               width: double.infinity,
               color: Colors.white,
@@ -369,24 +375,45 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       Row(
                         children: [
                           Expanded(child: Text("Jumlah product")),
-                          Text("2",style: headerTextStyle.copyWith(fontWeight: FontWeight.w600))
+                          Text("${cart.totalItem()}",
+                              style: headerTextStyle.copyWith(
+                                  fontWeight: FontWeight.w600))
                         ],
                       ),
                       SizedBox(height: 15),
                       Row(
                         children: [
                           Expanded(child: Text("Total harga product")),
-                          Text("Rp 50.000",
+                          Text(
+                              "${CurrencyFormat.convertToIdr(cart.totalPrice(), 0)}",
                               style: headerTextStyle.copyWith(
                                   fontWeight: FontWeight.w600))
                         ],
                       ),
-                                            SizedBox(height: 15),
-
+                      SizedBox(height: 15),
                       Row(
                         children: [
                           Expanded(child: Text("Ongkos kirim")),
                           Text("Free",
+                              style: headerTextStyle.copyWith(
+                                  fontWeight: FontWeight.w600))
+                        ],
+                      ),
+                      SizedBox(height: 20,),
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color:  neutral20,
+                          border: Border.all(color: neutral20)
+                        ),
+                        
+                      ),
+                      SizedBox(height: 20,),
+                         Row(
+                        children: [
+                          Expanded(child: Text("Total")),
+                          Text(                              "${CurrencyFormat.convertToIdr(cart.totalPrice(), 0)}",
+
                               style: headerTextStyle.copyWith(
                                   fontWeight: FontWeight.w600))
                         ],

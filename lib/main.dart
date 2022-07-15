@@ -3,6 +3,8 @@ import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/auth_providers.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
 import 'package:freshmarket/providers/category_providers.dart';
+import 'package:freshmarket/providers/payment_data_providers.dart';
+import 'package:freshmarket/providers/payment_providers.dart';
 import 'package:freshmarket/providers/product_providers.dart';
 import 'package:freshmarket/route/route_generator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,6 +54,12 @@ class MyApp extends StatelessWidget {
           
           ChangeNotifierProvider(
             create: (context) =>  CategoryProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) =>  PaymentProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) =>  PaymentDataProvider(),
           ),
           ChangeNotifierProvider(
             create: (context) =>  AddressProvider(),
