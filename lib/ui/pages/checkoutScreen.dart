@@ -102,7 +102,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       ),
       body: SafeArea(
         child: ListView(
-          padding: EdgeInsets.only(bottom: 20),
+          padding: EdgeInsets.only(bottom: 60),
           children: [
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
@@ -206,6 +206,77 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 30,),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        Column(
+                        children: [
+                          Image.asset('assets/images/icon_store_location.png',
+                              width: 40),
+                          Image.asset(
+                            'assets/images/icon_line.png',
+                            height: 30,
+                          ),
+                          Image.asset(
+                            'assets/images/icon_your_address.png',
+                            width: 40,
+                          )
+                        ],
+                      ),
+                        SizedBox(
+                        width: 12,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Outlet terdekat',
+                              style: headerTextStyle.copyWith(
+                                  fontSize: 14, fontWeight: FontWeight.w600)),
+                                  SizedBox(height: 3,),
+                          Text('Freshmarket cileunyi',
+                              style: subtitleTextStyle.copyWith(
+                                 )),
+                          SizedBox(
+                            height: 35,
+                          ),
+                         Text('Lokasi Kamu',
+                              style: headerTextStyle.copyWith(
+                                  fontSize: 14, fontWeight: FontWeight.w600)),
+                          SizedBox(
+                            height: 3,
+                          ),
+                          Text('${addressProvider.myAddress.label}',
+                              style: subtitleTextStyle.copyWith()),
+                        ],
+                      ),
+                   
+                    ],
+                  )
+                ],
+              ),
+            ),
+               SizedBox(
+              height: 20,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+              width: double.infinity,
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Pilih hari pengiriman",
+                        style: headerTextStyle.copyWith(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
                   SizedBox(
                     height: 30,
                   ),
@@ -238,6 +309,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             SizedBox(
               height: 20,
             ),
+           
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
               width: double.infinity,
@@ -267,7 +339,63 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                   )
                 ],
               ),
-            )
+            ),
+             SizedBox(
+              height: 20,
+            ),
+             Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+              width: double.infinity,
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Payment Summary",
+                        style: headerTextStyle.copyWith(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(child: Text("Jumlah product")),
+                          Text("2",style: headerTextStyle.copyWith(fontWeight: FontWeight.w600))
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Row(
+                        children: [
+                          Expanded(child: Text("Total harga product")),
+                          Text("Rp 50.000",
+                              style: headerTextStyle.copyWith(
+                                  fontWeight: FontWeight.w600))
+                        ],
+                      ),
+                                            SizedBox(height: 15),
+
+                      Row(
+                        children: [
+                          Expanded(child: Text("Ongkos kirim")),
+                          Text("Free",
+                              style: headerTextStyle.copyWith(
+                                  fontWeight: FontWeight.w600))
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),

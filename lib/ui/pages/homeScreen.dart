@@ -302,6 +302,7 @@ class ProductContainer extends StatelessWidget {
                       ),
                     ],
                   ),
+                  
                 ),
                 // Container(
                 //   width: 36,
@@ -312,9 +313,11 @@ class ProductContainer extends StatelessWidget {
                 //       borderRadius: BorderRadius.circular(100)),
                 //   child: Icon(Icons.add,color: Colors.white,),
                 // )
+                
               ],
-            )
+            ),
           ],
+        
         ),
       ),
     );

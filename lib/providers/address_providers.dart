@@ -3,7 +3,20 @@ import 'package:freshmarket/models/addressModels.dart';
 import 'package:freshmarket/service/address_service.dart';
 
 class AddressProvider with ChangeNotifier {
-  AddressModels? _address;
+  AddressModels? _address = AddressModels(
+     id: 0,
+      label : '',
+      districts : '',
+      usersId: 0,
+      fullAddress: '',
+      province : '',
+      city : '',
+      phoneNumber : "",
+      isMainAddress : 0,
+      createdAt :"",
+      updatedAt : ""
+    
+  );
   List<AddressModels> _listAddress = [];
 
   AddressModels get address => _address!;

@@ -48,7 +48,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         width: double.infinity,
         child: FloatingActionButton.extended(
           onPressed: () {
-            cartProvider.addCart(widget.product,qty.state);
+            cartProvider.addCart(widget.product, qty.state);
             Navigator.pushNamed(context, '/cart');
           },
           label: Text(
@@ -71,22 +71,27 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        width: 41.85,
-                        height: 41.85,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: Colors.white,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.arrow_back_ios_new,
-                              size: 20,
-                            )
-                          ],
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          width: 41.85,
+                          height: 41.85,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: Colors.white,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.arrow_back_ios_new,
+                                size: 20,
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       Expanded(child: SizedBox()),
@@ -155,7 +160,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("${ CurrencyFormat.convertToIdr(widget.product!.price,0)} ",
+                            Text(
+                                "${CurrencyFormat.convertToIdr(widget.product!.price, 0)} ",
                                 style: primaryTextStyle.copyWith(
                                     fontSize: 19, fontWeight: FontWeight.w600)),
                             Text("/ kg", style: subtitleTextStyle)

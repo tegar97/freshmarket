@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:freshmarket/ui/pages/addAddressScareen.dart';
 import 'package:freshmarket/ui/pages/addressScreen.dart';
 import 'package:freshmarket/ui/pages/cartScreen.dart';
+import 'package:freshmarket/ui/pages/categoryProductScreen.dart';
 import 'package:freshmarket/ui/pages/checkoutScreen.dart';
 import 'package:freshmarket/ui/pages/homeScreen.dart';
 import 'package:freshmarket/ui/pages/loginScreen.dart';
@@ -37,6 +38,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => AddAddress());
       case '/checkout':
         return MaterialPageRoute(builder: (_) => CheckOutScreen());
+      case '/category-product':
+        return MaterialPageRoute(builder: (_) => CategoryProduct());
    
 
       default:
