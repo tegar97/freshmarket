@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PaymentService {
   String baseUrl = "192.168.1.5";
 
-  Future<String> pay({List<CartModels>? carts, double? amount}) async {
+  Future<String> pay({List<CartModels>? carts, double? amount,String? api}) async {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     var headers = {
@@ -19,7 +19,7 @@ class PaymentService {
     };
 
     var url =
-        Uri.http(baseUrl, '/freshmarket/public/api/v1/order', {'q': '{http}'});
+        Uri.http(baseUrl, '/freshmarket/public/api/v1/order/${api}', {'q': '{http}'});
 
     var body = jsonEncode({'item_list': carts, 'amount': amount});
 

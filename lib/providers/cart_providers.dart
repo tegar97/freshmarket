@@ -36,6 +36,11 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  clearCart() {
+    _carts.clear();
+    notifyListeners();
+  }
+
   addQuantity(int id) {
     _carts[id].quantity = _carts[id].quantity! + 1;
     _carts[id].total = _carts[id].quantity! * (_carts[id].product!.price ?? 0);

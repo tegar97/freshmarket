@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freshmarket/models/addressModels.dart';
 import 'package:freshmarket/providers/address_providers.dart';
+import 'package:freshmarket/ui/global/widget/skeleton.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,7 @@ class _AddressScreenState extends State<AddressScreen> {
   }
 
   Future<void> getInit() async {
-        await Provider.of<AddressProvider>(context, listen: false).getAllAddress();
+    await Provider.of<AddressProvider>(context, listen: false).getAllAddress();
 
     await Provider.of<AddressProvider>(context, listen: false).getMyAddress();
   }
@@ -90,23 +91,29 @@ class _AddressScreenState extends State<AddressScreen> {
               future: _calculation,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return  addressProvider.listAddress.length < 1 ? EmptyAddress() : ListView(
-                      children: addressProvider.listAddress
-                          .map((address) => GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  detectChange = true;
-                                  id = address.id;
-                                });
-                                addressProvider.changeMainAaddress(address);
-                              },
-                              child: AddressBox(
-                                address: address,
-                                selectedAddress: addressProvider.myAddress,
-                              )))
-                          .toList());
+                  return addressProvider.listAddress.length < 1
+                      ? EmptyAddress()
+                      : ListView(
+                          children: addressProvider.listAddress
+                              .map((address) => GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      detectChange = true;
+                                      id = address.id;
+                                    });
+                                    addressProvider.changeMainAaddress(address);
+                                  },
+                                  child: AddressBox(
+                                    address: address,
+                                    selectedAddress: addressProvider.myAddress,
+                                  )))
+                              .toList());
                 } else {
-                  return Text("Loading");
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
+                  );
                 }
               },
             )),

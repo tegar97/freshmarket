@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freshmarket/data/content/listPayment.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
 import 'package:freshmarket/providers/payment_providers.dart';
 import 'package:freshmarket/ui/home/theme.dart';
@@ -13,7 +14,7 @@ class PaymentListScreen extends StatefulWidget {
 }
 
 class _PaymentListScreenState extends State<PaymentListScreen> {
-  bool bankSelect = false;
+  String? bankSelect = "";
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +29,18 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
         child: FloatingActionButton.extended(
           onPressed: () async {
             String? result = await paymentProvider.pay(
-                carts: cartProvider.carts, amount: cartProvider.totalPrice());
-            print(result);
+                carts: cartProvider.carts,
+                amount: cartProvider.totalPrice(),
+                api: bankSelect);
+            print(bankSelect);
+            cartProvider.clearCart();
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => LoadPaymentScreen(
-                        paymentId: result,
-                        )));          },
+                          paymentId: result,
+                        )));
+          },
           label: Text('Bayar sekarang'),
           backgroundColor: primaryColor,
         ),
@@ -64,44 +69,72 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
           child: ListView(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         children: [
-          Container(
-            margin: EdgeInsets.only(bottom: 20),
-            padding: EdgeInsets.symmetric(horizontal: 13, vertical: 11),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/bca.png',
-                        width: 50,
-                        height: 50,
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text("BCA Virtual account ",
-                          style: headerTextStyle.copyWith(
-                              fontWeight: FontWeight.w600))
-                    ],
+          GestureDetector(
+            child: Container(
+              child: Column(
+                  children: servicePayment.map((payment) {
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      bankSelect = payment.serviceApi;
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 13, vertical: 11),
+                    margin: EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                        color: bankSelect == payment.serviceApi
+                            ? Color(0xffF2FBF8)
+                            : neutral20,
+                        borderRadius: BorderRadius.circular(11),
+                        border: Border.all(
+                          color: bankSelect == payment.serviceApi
+                              ? primaryColor
+                              : neutral20,
+                        )),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                '${payment.serviceLogo}',
+                                width: 50,
+                                height: 50,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text("${payment.serviceName} ",
+                                  style: headerTextStyle.copyWith(
+                                      fontWeight: FontWeight.w600))
+                            ],
+                          ),
+                        ),
+                        // Checkbox(
+                        //     value: bankSelect ,
+                        //     checkColor: Colors.white,
+                        //     activeColor: primaryColor,
+                        //     onChanged: (val) {
+                        //       setState(() {
+                        //         bankSelect = payment.serviceName;
+                        //       });
+                        //     })
+
+                        bankSelect == payment.serviceApi
+                            ? Icon(
+                                Icons.verified,
+                                color: primaryColor,
+                              )
+                            : SizedBox(
+                                height: 40,
+                              )
+                      ],
+                    ),
                   ),
-                ),
-                Checkbox(
-                    value: bankSelect,
-                    checkColor: Colors.white,
-                    activeColor: primaryColor,
-                    onChanged: (val) {
-                      setState(() {
-                        bankSelect = val!;
-                      });
-                    })
-              ],
+                );
+              }).toList()),
             ),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(11),
-                border: Border.all(
-                  color: neutral20,
-                )),
           )
         ],
       )),

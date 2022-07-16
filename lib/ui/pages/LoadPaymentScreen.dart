@@ -5,8 +5,9 @@ import 'package:freshmarket/ui/pages/paymentCodeScreen.dart';
 import 'package:provider/provider.dart';
 
 class LoadPaymentScreen extends StatefulWidget {
-  const LoadPaymentScreen({Key? key, this.paymentId}) : super(key: key);
+  const LoadPaymentScreen({Key? key, this.paymentId,this.api}) : super(key: key);
   final String? paymentId;
+  final String? api;
 
   @override
   State<LoadPaymentScreen> createState() => _LoadPaymentScreenState();
@@ -29,10 +30,12 @@ class _LoadPaymentScreenState extends State<LoadPaymentScreen> {
               )));
       
     });
+    
   }
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(

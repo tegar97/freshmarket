@@ -3,6 +3,7 @@ import 'package:freshmarket/models/productModels.dart';
 import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
 import 'package:freshmarket/providers/product_providers.dart';
+import 'package:freshmarket/ui/global/widget/skeleton.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:freshmarket/ui/pages/checkoutScreen.dart';
 import 'package:freshmarket/ui/pages/homeScreen.dart';
@@ -28,6 +29,7 @@ class _CategoryProductState extends State<CategoryProduct> {
   Future<void> getInit() async {
     await Provider.of<ProductProvider>(context, listen: false)
         .getProductCategory(id: widget.id);
+    print(widget.id);
   }
 
   @override
@@ -144,7 +146,7 @@ class _CategoryProductState extends State<CategoryProduct> {
                       crossAxisCount: 2,
                       mainAxisSpacing: 20,
                       childAspectRatio: 0.62,
-                      children: productProvider.products
+                      children: productProvider.productsCategory
                           .map((product) => GestureDetector(
                               onTap: () {},
                               child: ProductCategoryContainer(
@@ -153,7 +155,19 @@ class _CategoryProductState extends State<CategoryProduct> {
                                   cartProvider: cartProvider)))
                           .toList());
                 } else {
-                  return Text("Loading");
+                  return GridView.count(
+                    // Create a grid with 2 columns. If you change the scrollDirection to
+                    // horizontal, this produces 2 rows.
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 20,
+                    childAspectRatio: 0.62,
+                    // Generate 100 widgets that display their index in the List.
+                    children: List.generate(4, (index) {
+                      return Container(
+                          child: Skeleton(),
+                          margin: EdgeInsets.only(right: 10));
+                    }),
+                  );
                 }
               },
             )),

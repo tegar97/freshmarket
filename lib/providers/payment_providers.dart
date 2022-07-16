@@ -16,9 +16,9 @@ class PaymentProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> pay({List<CartModels>? carts, double? amount}) async {
+  Future<String> pay({List<CartModels>? carts, double? amount,String? api}) async {
     try {
-      var transactionId = PaymentService().pay(carts: carts, amount: amount) ;
+      var transactionId = PaymentService().pay(carts: carts, amount: amount,api : api) ;
       return transactionId;
     } catch (e) {
       throw Exception("Error");
