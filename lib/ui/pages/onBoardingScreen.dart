@@ -37,6 +37,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         setState(() {
           isAuth = true;
         });
+           
+
         Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       }
     }

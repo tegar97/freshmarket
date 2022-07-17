@@ -6,12 +6,14 @@ import 'package:freshmarket/data/content/populer_product.dart';
 import 'package:freshmarket/models/categoryModels.dart';
 import 'package:freshmarket/models/productModels.dart';
 import 'package:freshmarket/models/userModels.dart';
+import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/auth_providers.dart';
 import 'package:freshmarket/providers/category_providers.dart';
 import 'package:freshmarket/providers/product_providers.dart';
 import 'package:freshmarket/ui/Widget/category.dart';
 import 'package:freshmarket/ui/global/widget/banner.dart';
 import 'package:freshmarket/ui/home/theme.dart';
+import 'package:freshmarket/ui/pages/addressScreen.dart';
 import 'package:freshmarket/ui/pages/productDetailScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,6 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
         name = user['name'];
       });
     }
+    await Provider.of<AddressProvider>(context, listen: false).getAllAddress();
+
   }
 
   Widget build(BuildContext context) {

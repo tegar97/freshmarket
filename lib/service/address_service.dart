@@ -15,6 +15,9 @@ class AddressService {
       String? districts,
       String? phoneNumber,
       bool? isMainAddress,
+      String? street,
+      String? latitude,
+      String? longitude,
       String? fullAddress}) async {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
@@ -33,7 +36,10 @@ class AddressService {
       'city': city,
       'districts': districts,
       'phoneNumber': phoneNumber,
-      'isMainAddress': isMainAddress
+      'isMainAddress': isMainAddress,
+      'street' : street,
+      'latitude' : latitude,
+      'longitude' : longitude
     });
     print(body);
 

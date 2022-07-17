@@ -87,29 +87,35 @@ class _CategoryProductState extends State<CategoryProduct> {
                     SizedBox(
                       width: widthDevice * 0.19,
                     ),
-                    Text(
-                      "${CurrencyFormat.convertToIdr(cartProvider.totalPrice(), 0)}",
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: Colors.white),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, '/cart');
-                        },
-                        child: Icon(
-                          Icons.arrow_right_alt,
-                          color: primaryColor,
-                          size: 30,
-                        ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/cart');
+                      },
+                      child: Row(
+                        children: [
+                          Text(
+                            "${CurrencyFormat.convertToIdr(cartProvider.totalPrice(), 0)}",
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: Colors.white),
+                            child: GestureDetector(
+                              child: Icon(
+                                Icons.arrow_right_alt,
+                                color: primaryColor,
+                                size: 30,
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                    )
+                    ),
                   ],
                 ),
                 backgroundColor: primaryColor,

@@ -6,6 +6,8 @@ import 'package:freshmarket/providers/category_providers.dart';
 import 'package:freshmarket/providers/payment_data_providers.dart';
 import 'package:freshmarket/providers/payment_providers.dart';
 import 'package:freshmarket/providers/product_providers.dart';
+import 'package:freshmarket/providers/recipeProviders.dart';
+import 'package:freshmarket/providers/store_provider.dart';
 import 'package:freshmarket/route/route_generator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +58,13 @@ class MyApp extends StatelessWidget {
             create: (context) =>  CategoryProvider(),
           ),
           ChangeNotifierProvider(
+            create: (context) =>  StoreProvider(),
+          ),
+          ChangeNotifierProvider(
             create: (context) =>  PaymentProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) =>  RecipeProvider(),
           ),
           ChangeNotifierProvider(
             create: (context) =>  PaymentDataProvider(),

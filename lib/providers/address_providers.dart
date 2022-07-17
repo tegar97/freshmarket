@@ -44,6 +44,9 @@ class AddressProvider with ChangeNotifier {
       String? districts,
       String? phoneNumber,
       bool? isMainAddress,
+      String? street,
+      String? longitude,
+      String? latitude,
       String? fullAddress}) async {
     try {
       bool address = await AddressService().addAddress(
@@ -53,7 +56,10 @@ class AddressProvider with ChangeNotifier {
           city: city,
           isMainAddress: isMainAddress,
           fullAddress: fullAddress,
-          label: label);
+          label: label,
+          latitude: latitude,
+          longitude: longitude,
+          street: street,);
 
       return true;
     } catch (e) {

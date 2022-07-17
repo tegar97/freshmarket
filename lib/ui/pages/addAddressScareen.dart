@@ -23,6 +23,9 @@ class _AddAddressState extends State<AddAddress> {
   TextEditingController? districts = TextEditingController(text: "");
   TextEditingController? phoneNumber = TextEditingController(text: "");
   TextEditingController? complateAddress = TextEditingController(text: "");
+  TextEditingController? street = TextEditingController(text: "");
+  String? latitude;
+  String? longitude;
   bool? isMainAddress = false;
   List<Placemark>? placemarks;
   LocationPermission? locationPermission;
@@ -68,12 +71,17 @@ class _AddAddressState extends State<AddAddress> {
       });
       // When we reach here, permissions are granted and we can
       // continue accessing the position of the device.
+      print(position);
+      latitude = position.latitude.toString();
+      longitude = position.longitude.toString();
+
       placemarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
       print(placemarks);
 
       province!.value =
           province!.value.copyWith(text: placemarks![0].administrativeArea);
+      street!.value = province!.value.copyWith(text: placemarks![1].street);
       city!.value =
           city!.value.copyWith(text: placemarks![0].subAdministrativeArea);
       districts!.value =
@@ -101,6 +109,9 @@ class _AddAddressState extends State<AddAddress> {
           districts: districts!.text.toString(),
           phoneNumber: phoneNumber!.text.toString(),
           isMainAddress: isMainAddress,
+          street: street!.text.toString(),
+          latitude: latitude,
+          longitude: longitude,
           fullAddress: complateAddress!.text.toString())) {
         Navigator.pushReplacementNamed(context, '/address');
       } else {

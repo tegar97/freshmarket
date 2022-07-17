@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freshmarket/data/content/populer_product.dart';
 import 'package:freshmarket/models/cartModels.dart';
+import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:freshmarket/ui/pages/checkoutScreen.dart';
@@ -15,8 +16,9 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CartProvider cartProvider = Provider.of<CartProvider>(context);
+    AddressProvider addressProvider = Provider.of<AddressProvider>(context);
     double widthDevice = MediaQuery.of(context).size.width;
-
+    print('check ${addressProvider.listAddress.length}');
     return Scaffold(
       backgroundColor: Color(0xffFAFAFA),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -27,12 +29,16 @@ class CartScreen extends StatelessWidget {
         child: cartProvider.carts.length > 0
             ? FloatingActionButton.extended(
                 onPressed: () {
-                 Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CheckOutScreen(
-                                carts: cartProvider.carts,
-                              )));
+                  if (addressProvider.listAddress.length > 0) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CheckOutScreen(
+                                  carts: cartProvider.carts,
+                                )));
+                  } else {
+                    Navigator.pushNamed(context, '/address');
+                  }
                 },
                 label: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -271,7 +277,7 @@ class CartBox extends StatelessWidget {
                     SizedBox(
                       height: 5,
                     ),
-                  Text(
+                    Text(
                         "Berat : ${(((cart!.product!.weight ?? 0).toInt() * (cart!.quantity ?? 0).toInt()) / 10000).toInt()} kg",
                         style: subtitleTextStyle.copyWith(fontSize: 14)),
                   ],

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:freshmarket/providers/category_providers.dart';
 import 'package:freshmarket/providers/product_providers.dart';
+import 'package:freshmarket/providers/recipeProviders.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,6 +25,7 @@ class _SpalashScreenState extends State<SpalashScreen> {
   getInit() async {
     await Provider.of<CategoryProvider>(context, listen: false).getCategory();
     await Provider.of<ProductProvider>(context, listen: false).getProduct();
+    await Provider.of<RecipeProvider>(context, listen: false).getRecipe();
     
     final prefs = await SharedPreferences.getInstance();
     prefs.get('token');

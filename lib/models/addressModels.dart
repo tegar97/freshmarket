@@ -7,6 +7,9 @@ class AddressModels {
   String? city;
   String? districts;
   String? phoneNumber;
+  String? street;
+  String? latitude;
+  String? longitude;
   int? isMainAddress;
 
   String? createdAt;
@@ -22,6 +25,9 @@ class AddressModels {
       this.districts,
       this.phoneNumber,
       this.isMainAddress,
+      this.street,
+      this.latitude,
+      this.longitude,
       this.createdAt,
       this.updatedAt});
   AddressModels.fromJson(Map<String, dynamic> json) {
@@ -34,26 +40,29 @@ class AddressModels {
     districts = json['districts'];
     phoneNumber = json['phoneNumber'];
     isMainAddress = json['isMainAddress'];
+    street = json['street'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'label' : label,
-      'districts' : districts,
+      'label': label,
+      'districts': districts,
       'users_id': usersId,
       'fullAddress': fullAddress,
-      'province' : province,
-      'city' : city,
-      'phoneNumber' : phoneNumber,
-      'isMainAddress' : isMainAddress,
-      'created_at' : createdAt,
-      'update_at' : updatedAt
+      'province': province,
+      'city': city,
+      'phoneNumber': phoneNumber,
+      'isMainAddress': isMainAddress,
+      'street' : street,
+      'latitude' : latitude,
+      'longitude' : longitude,
+      'created_at': createdAt,
+      'update_at': updatedAt
     };
   }
-
-  
 }

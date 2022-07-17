@@ -3,6 +3,7 @@ import 'package:freshmarket/models/addressModels.dart';
 import 'package:freshmarket/models/cartModels.dart';
 import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
+import 'package:freshmarket/providers/store_provider.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:freshmarket/helper/convertRupiah.dart';
@@ -30,6 +31,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
   getInit() async {
     await Provider.of<AddressProvider>(context, listen: false).getMyAddress();
+    await Provider.of<StoreProvider>(context, listen: false).getNearStore();
   }
 
   final _currentDate = DateTime.now();
@@ -45,6 +47,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   @override
   Widget build(BuildContext context) {
     AddressProvider addressProvider = Provider.of<AddressProvider>(context);
+    StoreProvider nearOutlet = Provider.of<StoreProvider>(context);
     CartProvider cart = Provider.of<CartProvider>(context);
     print(addressProvider.address.city);
     final dates = <Widget>[];
@@ -197,71 +200,83 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
               width: double.infinity,
               color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Pilih hari pengiriman",
-                        style: headerTextStyle.copyWith(
-                            fontSize: 20, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: [
-                          Image.asset('assets/images/icon_store_location.png',
-                              width: 40),
-                          Image.asset(
-                            'assets/images/icon_line.png',
-                            height: 30,
-                          ),
-                          Image.asset(
-                            'assets/images/icon_your_address.png',
-                            width: 40,
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        width: 12,
-                      ),
-                      Column(
+              child: FutureBuilder(
+                  future: delay,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Outlet terdekat',
-                              style: headerTextStyle.copyWith(
-                                  fontSize: 14, fontWeight: FontWeight.w600)),
-                          SizedBox(
-                            height: 3,
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Lokasi pengiriman",
+                                style: headerTextStyle.copyWith(
+                                    fontSize: 20, fontWeight: FontWeight.w600),
+                              ),
+                            ],
                           ),
-                          Text('Freshmarket cileunyi',
-                              style: subtitleTextStyle.copyWith()),
                           SizedBox(
-                            height: 35,
+                            height: 30,
                           ),
-                          Text('Lokasi Kamu',
-                              style: headerTextStyle.copyWith(
-                                  fontSize: 14, fontWeight: FontWeight.w600)),
-                          SizedBox(
-                            height: 3,
-                          ),
-                          Text('${addressProvider.myAddress.label}',
-                              style: subtitleTextStyle.copyWith()),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                children: [
+                                  Image.asset(
+                                      'assets/images/icon_store_location.png',
+                                      width: 40),
+                                  Image.asset(
+                                    'assets/images/icon_line.png',
+                                    height: 30,
+                                  ),
+                                  Image.asset(
+                                    'assets/images/icon_your_address.png',
+                                    width: 40,
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                width: 12,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      'Outlet terdekat (${(nearOutlet.store.distance ?? 0) < 1 ? (((nearOutlet.store.distance ?? 0) * 1000).toInt()) : nearOutlet.store.distance!.toInt()} ${(nearOutlet.store.distance ?? 0) < 1 ? 'M' : 'KM'})',
+                                      style: headerTextStyle.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600)),
+                                  SizedBox(
+                                    height: 3,
+                                  ),
+                                  Text("${nearOutlet.store.name}",
+                                      style: subtitleTextStyle.copyWith()),
+                                  SizedBox(
+                                    height: 35,
+                                  ),
+                                  Text('Lokasi Kamu',
+                                      style: headerTextStyle.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600)),
+                                  SizedBox(
+                                    height: 3,
+                                  ),
+                                  Text('${addressProvider.myAddress.label}',
+                                      style: subtitleTextStyle.copyWith()),
+                                ],
+                              ),
+                            ],
+                          )
                         ],
-                      ),
-                    ],
-                  )
-                ],
-              ),
+                      );
+                    } else {
+                      return Text("Loading");
+                    }
+                  }),
             ),
             SizedBox(
               height: 20,
@@ -399,21 +414,23 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                   fontWeight: FontWeight.w600))
                         ],
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(
+                        height: 20,
+                      ),
                       Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color:  neutral20,
-                          border: Border.all(color: neutral20)
-                        ),
-                        
+                            color: neutral20,
+                            border: Border.all(color: neutral20)),
                       ),
-                      SizedBox(height: 20,),
-                         Row(
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
                         children: [
                           Expanded(child: Text("Total")),
-                          Text(                              "${CurrencyFormat.convertToIdr(cart.totalPrice(), 0)}",
-
+                          Text(
+                              "${CurrencyFormat.convertToIdr(cart.totalPrice(), 0)}",
                               style: headerTextStyle.copyWith(
                                   fontWeight: FontWeight.w600))
                         ],
