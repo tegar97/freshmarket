@@ -140,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onPressed: () {
                               handleSignup();
                             },
-                            child: Text("Login",
+                            child: Text("Masuk",
                                 style: TextStyle(
                                     fontSize: 17, fontWeight: FontWeight.w700)),
                             style: TextButton.styleFrom(

@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:freshmarket/data/setting/url.dart';
 import 'package:freshmarket/models/categoryModels.dart';
 import 'package:freshmarket/models/userModels.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
-  String baseUrl = "192.168.1.5";
+  String baseUrl = apiUrl;
 
   Future<UserModels> register(
       {String? name, String? email, String? password}) async {

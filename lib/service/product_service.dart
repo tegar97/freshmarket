@@ -1,11 +1,12 @@
 import 'dart:convert';
 
+import 'package:freshmarket/data/setting/url.dart';
 import 'package:freshmarket/models/categoryModels.dart';
 import 'package:freshmarket/models/productModels.dart';
 import 'package:http/http.dart' as http;
 
 class ProductService {
-  String baseUrl = "192.168.1.5";
+  String baseUrl = apiUrl;
 
   Future<List<ProductModels>> getProduct({int? id}) async {
     var headers = {'Content-Type': 'application/json'};

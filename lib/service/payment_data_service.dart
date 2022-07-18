@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:freshmarket/data/setting/url.dart';
 import 'package:freshmarket/models/categoryModels.dart';
 import 'package:freshmarket/models/paymentDataModels.dart';
 import 'package:freshmarket/models/paymentModels.dart';
 import 'package:http/http.dart' as http;
 
 class PaymentDataService {
-  String baseUrl = "192.168.1.5";
+  String baseUrl = apiUrl;
 
   Future<PaymentDataModels> getPaymentData(String? paymentId) async {
     var headers = {'Content-Type': 'application/json'};

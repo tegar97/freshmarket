@@ -3,6 +3,7 @@ import 'package:freshmarket/data/content/populer_product.dart';
 import 'package:freshmarket/models/cartModels.dart';
 import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
+import 'package:freshmarket/providers/product_providers.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:freshmarket/ui/pages/checkoutScreen.dart';
 import 'package:freshmarket/ui/pages/homeScreen.dart';
@@ -15,6 +16,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  ProductProvider productProvider = Provider.of<ProductProvider>(context);
     CartProvider cartProvider = Provider.of<CartProvider>(context);
     AddressProvider addressProvider = Provider.of<AddressProvider>(context);
     double widthDevice = MediaQuery.of(context).size.width;
@@ -168,20 +170,16 @@ class CartScreen extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    // Container(
-                    //   width: widthDevice - 32,
-                    //   height: 214,
-                    //   child: ListView.builder(
-                    //     itemCount: productPopuler.length,
-                    //     scrollDirection: Axis.horizontal,
-                    //     itemBuilder: (context, index) {
-                    //       return ProductContainer(
-                    //           widthDevice: widthDevice,
-                    //           title: productPopuler[index].name,
-                    //           image: productPopuler[index].image);
-                    //     },
-                    //   ),
-                    // )
+                    Container(
+                      width: widthDevice - 36,
+                      height: 214,
+                      child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: productProvider.products
+                              .map((product) => ProductContainer(
+                                  widthDevice: widthDevice, product: product))
+                              .toList()),
+                    )
                   ],
                 )
               ],

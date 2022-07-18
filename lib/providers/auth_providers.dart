@@ -5,7 +5,14 @@ import 'package:freshmarket/service/category_service.dart';
 import 'package:freshmarket/service/user_service.dart';
 
 class UsersProvider with ChangeNotifier {
-  UserModels? _users;
+  UserModels? _users = UserModels(
+    id: 0,
+    name: '',
+    email: '',
+    token: '',
+    avatar: '',
+    password: ''
+  );
 
   UserModels get users => _users!;
   set users(UserModels categories) {

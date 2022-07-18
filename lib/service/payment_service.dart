@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:freshmarket/data/setting/url.dart';
 import 'package:freshmarket/models/cartModels.dart';
 import 'package:freshmarket/models/categoryModels.dart';
 import 'package:freshmarket/models/paymentModels.dart';
@@ -8,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentService {
-  String baseUrl = "192.168.1.5";
+  String baseUrl = apiUrl;
 
   Future<String> pay({List<CartModels>? carts, double? amount,String? api}) async {
     final prefs = await SharedPreferences.getInstance();

@@ -46,6 +46,7 @@ class _AddAddressState extends State<AddAddress> {
       }
 
       permission = await Geolocator.checkPermission();
+      print(permission);
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {

@@ -68,7 +68,6 @@ class PaymentCodeScreen extends StatelessWidget {
                                         fontWeight: FontWeight.w600))
                               ],
                             )),
-                       
                           ],
                         ),
                       ),
@@ -280,8 +279,10 @@ class SuccessPayment extends StatelessWidget {
               height: 40,
             ),
             TextButton(
-              onPressed: () {},
-              child: Text("Track order ",
+              onPressed: () {
+                Navigator.pushNamed(context, '/home');
+              },
+              child: Text("Kembali ke home ",
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
               style: TextButton.styleFrom(
                 backgroundColor: primaryColor,

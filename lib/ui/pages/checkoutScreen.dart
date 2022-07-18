@@ -4,6 +4,7 @@ import 'package:freshmarket/models/cartModels.dart';
 import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
 import 'package:freshmarket/providers/store_provider.dart';
+import 'package:freshmarket/ui/global/widget/skeleton.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:freshmarket/helper/convertRupiah.dart';
@@ -74,16 +75,35 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        width: double.infinity,
-        child: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.pushNamed(context, '/payment-list');
-          },
-          label: Text('Bayar'),
-          backgroundColor: primaryColor,
-        ),
+      floatingActionButton: FutureBuilder(
+        future: delay,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return (nearOutlet.store.distance ?? 0) < 25
+                ? Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    width: double.infinity,
+                    child: FloatingActionButton.extended(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/payment-list');
+                      },
+                      label: Text('Bayar'),
+                      backgroundColor: primaryColor,
+                    ),
+                  )
+                : Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16),
+                    width: double.infinity,
+                    child: FloatingActionButton.extended(
+                      onPressed: () {},
+                      label: Text('Bayar'),
+                      backgroundColor: neutral60,
+                    ),
+                  );
+          } else {
+            return SizedBox();
+          }
+        },
       ),
       backgroundColor: Color(0xffFAFAFA),
       appBar: AppBar(
@@ -187,7 +207,20 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                     ],
                                   ));
                         } else {
-                          return Text("Loading ...");
+                          return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [],
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                Skeleton()
+                              ]);
                         }
                       })
                 ],
@@ -204,77 +237,116 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                   future: delay,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                     return Column(
+                      return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                "Lokasi pengiriman",
-                                style: headerTextStyle.copyWith(
-                                    fontSize: 20, fontWeight: FontWeight.w600),
+                              Expanded(
+                                child: Text(
+                                  "Lokasi pengiriman",
+                                  style: headerTextStyle.copyWith(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600),
+                                ),
                               ),
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(context, '/list-outlet');
+                                  },
+                                  child: Text("Lihat list outlet",
+                                      style: primaryTextStyle.copyWith(
+                                          fontSize: 12)))
                             ],
                           ),
                           SizedBox(
                             height: 30,
                           ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                children: [
-                                  Image.asset(
-                                      'assets/images/icon_store_location.png',
-                                      width: 40),
-                                  Image.asset(
-                                    'assets/images/icon_line.png',
-                                    height: 30,
-                                  ),
-                                  Image.asset(
-                                    'assets/images/icon_your_address.png',
-                                    width: 40,
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                width: 12,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      'Outlet terdekat (${(nearOutlet.store.distance ?? 0) < 1 ? (((nearOutlet.store.distance ?? 0) * 1000).toInt()) : nearOutlet.store.distance!.toInt()} ${(nearOutlet.store.distance ?? 0) < 1 ? 'M' : 'KM'})',
-                                      style: headerTextStyle.copyWith(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600)),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Text("${nearOutlet.store.name}",
-                                      style: subtitleTextStyle.copyWith()),
-                                  SizedBox(
-                                    height: 35,
-                                  ),
-                                  Text('Lokasi Kamu',
-                                      style: headerTextStyle.copyWith(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600)),
-                                  SizedBox(
-                                    height: 3,
-                                  ),
-                                  Text('${addressProvider.myAddress.label}',
-                                      style: subtitleTextStyle.copyWith()),
-                                ],
-                              ),
-                            ],
-                          )
+                          (nearOutlet.store.distance ?? 0) > 25
+                              ? Text(
+                                  "Uppss sepertinya kami belum tersedia untuk wilayah kamu :(",
+                                  style: headerTextStyle.copyWith(
+                                      color: alertColor),
+                                )
+                              : Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Image.asset(
+                                            'assets/images/icon_store_location.png',
+                                            width: 40),
+                                        Image.asset(
+                                          'assets/images/icon_line.png',
+                                          height: 30,
+                                        ),
+                                        Image.asset(
+                                          'assets/images/icon_your_address.png',
+                                          width: 40,
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 12,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            'Outlet terdekat (${(nearOutlet.store.distance ?? 0) < 1 ? (((nearOutlet.store.distance ?? 0) * 1000).toInt()) : nearOutlet.store.distance!.toInt()} ${(nearOutlet.store.distance ?? 0) < 1 ? 'M' : 'KM'})',
+                                            style: headerTextStyle.copyWith(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600)),
+                                        SizedBox(
+                                          height: 3,
+                                        ),
+                                        Text("${nearOutlet.store.name}",
+                                            style:
+                                                subtitleTextStyle.copyWith()),
+                                        SizedBox(
+                                          height: 35,
+                                        ),
+                                        Text('Lokasi Kamu',
+                                            style: headerTextStyle.copyWith(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600)),
+                                        SizedBox(
+                                          height: 3,
+                                        ),
+                                        Text(
+                                            '${addressProvider.myAddress.label}',
+                                            style:
+                                                subtitleTextStyle.copyWith()),
+                                      ],
+                                    ),
+                                  ],
+                                )
                         ],
                       );
                     } else {
-                      return Text("Loading");
+                      return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Lokasi pengiriman",
+                                  style: headerTextStyle.copyWith(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Skeleton()
+                          ]);
                     }
                   }),
             ),

@@ -5,7 +5,9 @@ import 'package:freshmarket/ui/pages/addressScreen.dart';
 import 'package:freshmarket/ui/pages/cartScreen.dart';
 import 'package:freshmarket/ui/pages/categoryProductScreen.dart';
 import 'package:freshmarket/ui/pages/checkoutScreen.dart';
+import 'package:freshmarket/ui/pages/discover.dart';
 import 'package:freshmarket/ui/pages/homeScreen.dart';
+import 'package:freshmarket/ui/pages/listOutlet.dart';
 import 'package:freshmarket/ui/pages/loginScreen.dart';
 import 'package:freshmarket/ui/pages/main_pages.dart';
 import 'package:freshmarket/ui/pages/onBoardingScreen.dart';
@@ -52,6 +54,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => PaymentCodeScreen());
       case '/recipe-detail':
         return MaterialPageRoute(builder: (_) => RecipeDetailScreen());
+      case '/recipe':
+        return MaterialPageRoute(builder: (_) => Discover());
+      case '/list-outlet':
+        return MaterialPageRoute(builder: (_) => ListOutlet());
    
 
       default:

@@ -3,6 +3,8 @@ import 'package:freshmarket/ui/home/theme.dart';
 import 'package:freshmarket/ui/pages/cartScreen.dart';
 import 'package:freshmarket/ui/pages/discover.dart';
 import 'package:freshmarket/ui/pages/homeScreen.dart';
+import 'package:freshmarket/ui/pages/profileScreen.dart';
+import 'package:freshmarket/ui/pages/transactionListScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPages extends StatefulWidget {
@@ -37,21 +39,9 @@ class _MainPagesState extends State<MainPages> {
       case 1:
         return Discover();
       case 2:
-        return HomeScreen();
+        return TransactionList();
       case 3:
-        return Scaffold(
-          body: SafeArea(
-            child: GestureDetector(
-              onTap: () async {
-                 SharedPreferences localStorage = await SharedPreferences.getInstance();
-                localStorage.remove('user');
-                localStorage.remove('token');
-                Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
-               
-              },
-              child: Text("Logout")),
-          ),
-        );
+        return ProfileScreen();
       default:
         return HomeScreen();
     }

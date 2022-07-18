@@ -13,6 +13,7 @@ const Color neutral60 = Color(0xff9E9E9E);
 const Color neutral30 = Color(0xffEDEDED);
 const Color neutral20 = Color(0xffF5F5F5);
 const Color alertColor = Color(0xffED6363);
+const Color alertColorSurface = Color(0xffFFEEEE);
 
 const Color headerColor = Color(0xff1B1C1E);
 

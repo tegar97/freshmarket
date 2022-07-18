@@ -37,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _loadUserData() async {
-    
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var user = jsonDecode(localStorage.getString('user')!);
     print(localStorage.getString('token')!);
@@ -47,7 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     }
     await Provider.of<AddressProvider>(context, listen: false).getAllAddress();
-
   }
 
   Widget build(BuildContext context) {
@@ -116,14 +114,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 41,
                   ),
-                  Container(
-                    width: double.infinity,
-                    height: 138,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                      image: AssetImage("assets/images/bannerMain.jpg"),
-                      fit: BoxFit.fill,
-                    )),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/recipe');
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 138,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                        image: AssetImage("assets/images/bannerMain.jpg"),
+                        fit: BoxFit.fill,
+                      )),
+                    ),
                   ),
                   SizedBox(
                     height: 25,
@@ -245,7 +248,6 @@ class ProductContainer extends StatelessWidget {
 
   final double widthDevice;
   final ProductModels product;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -306,7 +308,6 @@ class ProductContainer extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
                 ),
                 // Container(
                 //   width: 36,
@@ -317,11 +318,9 @@ class ProductContainer extends StatelessWidget {
                 //       borderRadius: BorderRadius.circular(100)),
                 //   child: Icon(Icons.add,color: Colors.white,),
                 // )
-                
               ],
             ),
           ],
-        
         ),
       ),
     );
