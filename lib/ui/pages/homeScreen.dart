@@ -8,6 +8,7 @@ import 'package:freshmarket/models/productModels.dart';
 import 'package:freshmarket/models/userModels.dart';
 import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/auth_providers.dart';
+import 'package:freshmarket/providers/category_product_providers.dart';
 import 'package:freshmarket/providers/category_providers.dart';
 import 'package:freshmarket/providers/product_providers.dart';
 import 'package:freshmarket/ui/Widget/category.dart';
@@ -52,7 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
     double widthDevice = MediaQuery.of(context).size.width;
     CategoryProvider categoryProvider = Provider.of<CategoryProvider>(context);
     ProductProvider productProvider = Provider.of<ProductProvider>(context);
-
+    CategoryProductProviders categoryProductProvider =
+        Provider.of<CategoryProductProviders>(context);
+    print(categoryProductProvider.categories.length);
     return Scaffold(
       backgroundColor: lightModeBgColor,
       body: SafeArea(
@@ -230,10 +233,59 @@ class _HomeScreenState extends State<HomeScreen> {
                                 .toList()),
                       )
                     ],
-                  )
+                  ),
                 ],
               ),
-            )
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            Column(
+                children: categoryProductProvider.categories.map((category) {
+              return Container(
+                margin: EdgeInsets.only(bottom: 40),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${category.name}",
+                            style: headerTextStyle.copyWith(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                          SizedBox(width: 5,),
+                          Image.network( '$baseUrl/icon/${category.icon}',width: 20,height: 20,
+                          )
+                        ],
+
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            width: widthDevice - 16,
+                            height: 214,
+                            child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: category.products!
+                                    .map((product) => ProductContainer(
+                                        widthDevice: widthDevice,
+                                        product: product))
+                                    .toList()),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList())
           ],
         ),
       ),

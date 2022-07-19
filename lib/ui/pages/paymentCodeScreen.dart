@@ -11,6 +11,7 @@ class PaymentCodeScreen extends StatelessWidget {
   const PaymentCodeScreen({Key? key, this.paymentId}) : super(key: key);
   final String? paymentId;
   @override
+  
   Widget build(BuildContext context) {
     PaymentDataProvider paymentProvider =
         Provider.of<PaymentDataProvider>(context);
@@ -245,6 +246,7 @@ class PaymentCodeScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                    Text("Kembali ke halaman home",textAlign: TextAlign.center,style: primaryTextStyle.copyWith(fontSize: 14,fontWeight: FontWeight.w600))
                     ],
                   )));
   }

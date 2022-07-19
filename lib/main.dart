@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/auth_providers.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
+import 'package:freshmarket/providers/category_product_providers.dart';
 import 'package:freshmarket/providers/category_providers.dart';
 import 'package:freshmarket/providers/payment_data_providers.dart';
 import 'package:freshmarket/providers/payment_providers.dart';
@@ -60,6 +61,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(
             create: (context) =>  StoreProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) =>  CategoryProductProviders(),
           ),
           ChangeNotifierProvider(
             create: (context) =>  PaymentProvider(),
