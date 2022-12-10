@@ -10,6 +10,7 @@ import 'package:freshmarket/ui/pages/homeScreen.dart';
 import 'package:freshmarket/ui/pages/listOutlet.dart';
 import 'package:freshmarket/ui/pages/loginScreen.dart';
 import 'package:freshmarket/ui/pages/main_pages.dart';
+import 'package:freshmarket/ui/pages/noConnectionScreen.dart';
 import 'package:freshmarket/ui/pages/onBoardingScreen.dart';
 import 'package:freshmarket/ui/pages/paymentCodeScreen.dart';
 import 'package:freshmarket/ui/pages/paymentListScreen.dart';
@@ -58,7 +59,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Discover());
       case '/list-outlet':
         return MaterialPageRoute(builder: (_) => ListOutlet());
-   
+      case '/no-internet':
+        return MaterialPageRoute(builder: (_) => NoInternetConnection());
 
       default:
         return _errorRoute();

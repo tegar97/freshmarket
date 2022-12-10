@@ -12,7 +12,7 @@ class CategoryService {
 
     var url =  Uri.http(baseUrl, '/freshmarket/public/api/v1/category', {'q': '{http}'});
     var response = await http.get(url);
-    print(response.body);
+ 
 
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body)['data'];

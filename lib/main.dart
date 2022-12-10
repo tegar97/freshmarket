@@ -10,6 +10,7 @@ import 'package:freshmarket/providers/product_providers.dart';
 import 'package:freshmarket/providers/recipeProviders.dart';
 import 'package:freshmarket/providers/store_provider.dart';
 import 'package:freshmarket/providers/transaction_providers.dart';
+import 'package:freshmarket/providers/voucher_providers.dart';
 import 'package:freshmarket/route/route_generator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -89,7 +90,11 @@ class MyApp extends StatelessWidget {
           ),
              ChangeNotifierProvider(
           create: (context) => UsersProvider(),
+        ),
+             ChangeNotifierProvider(
+          create: (context) => VoucherProvider(),
         )
+          
           
           
           ],

@@ -67,7 +67,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     },
                     itemBuilder: (_, i) {
                       return Padding(
-                        padding: EdgeInsets.only(top: 43, left: 16, right: 16),
+                        padding: EdgeInsets.only(top: 2, left: 16, right: 16),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [

@@ -13,7 +13,7 @@ class PaymentCodeScreen extends StatelessWidget {
   @override
   
   Widget build(BuildContext context) {
-    PaymentDataProvider paymentProvider =
+    PaymentDataProvider paymentProvider = 
         Provider.of<PaymentDataProvider>(context);
 
     return Scaffold(

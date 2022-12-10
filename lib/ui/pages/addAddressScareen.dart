@@ -280,7 +280,7 @@ class _AddAddressState extends State<AddAddress> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset('assets/images/supply.png'),
+                        Image.asset('assets/images/supply.png',height: 250,),
                         SizedBox(
                           height: 60,
                         ),
@@ -296,9 +296,8 @@ class _AddAddressState extends State<AddAddress> {
                           style: subtitleTextStyle.copyWith(
                               fontSize: 14, height: 1.4),
                         ),
-                        SizedBox(
-                          height: 40,
-                        ),
+                        SizedBox(height: 20,),
+
                         TextButton(
                           onPressed: () {
                             _determinePosition();

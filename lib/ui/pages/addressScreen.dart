@@ -202,7 +202,10 @@ class EmptyAddress extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset('assets/images/courier.png'),
+    
+        Image.asset('assets/images/courier.png',
+          height: 250,
+        ),
         SizedBox(
           height: 60,
         ),
@@ -217,9 +220,8 @@ class EmptyAddress extends StatelessWidget {
           textAlign: TextAlign.center,
           style: subtitleTextStyle.copyWith(fontSize: 14, height: 1.4),
         ),
-        SizedBox(
-          height: 40,
-        ),
+        SizedBox(height: 20,),
+      
         TextButton(
           onPressed: () {
             Navigator.pushNamed(context, '/add-address');
