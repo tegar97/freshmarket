@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:freshmarket/ui/pages/AdditionalInformation.dart';
 import 'package:freshmarket/ui/pages/LoadPaymentScreen.dart';
+import 'package:freshmarket/ui/pages/TrackDriverScreen.dart';
 import 'package:freshmarket/ui/pages/addAddressScareen.dart';
 import 'package:freshmarket/ui/pages/addressScreen.dart';
 import 'package:freshmarket/ui/pages/cartScreen.dart';
@@ -15,8 +17,10 @@ import 'package:freshmarket/ui/pages/onBoardingScreen.dart';
 import 'package:freshmarket/ui/pages/paymentCodeScreen.dart';
 import 'package:freshmarket/ui/pages/paymentListScreen.dart';
 import 'package:freshmarket/ui/pages/productDetailScreen.dart';
+import 'package:freshmarket/ui/pages/productSearchScreen.dart';
 import 'package:freshmarket/ui/pages/recipeDetailScreen.dart';
 import 'package:freshmarket/ui/pages/registerScreen.dart';
+import 'package:freshmarket/ui/pages/searchLocationScreen.dart';
 import 'package:freshmarket/ui/pages/splashScreen.dart';
 
 class RouteGenerator {
@@ -39,10 +43,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ProductDetailScreen());
       case '/cart':
         return MaterialPageRoute(builder: (_) => CartScreen());
-      case '/address':
-        return MaterialPageRoute(builder: (_) => AddressScreen());
-      case '/add-address':
-        return MaterialPageRoute(builder: (_) => AddAddress());
+      // case '/address':
+      //   return MaterialPageRoute(builder: (_) => AddressScreen());
+      // case '/add-address':
+      //   return MaterialPageRoute(builder: (_) => AddAddress());
       case '/checkout':
         return MaterialPageRoute(builder: (_) => CheckOutScreen());
       case '/category-product':
@@ -61,7 +65,14 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ListOutlet());
       case '/no-internet':
         return MaterialPageRoute(builder: (_) => NoInternetConnection());
-
+      case '/search-product':
+        return MaterialPageRoute(builder: (_) => ProductSearchScreen());
+      case '/search-location':
+        return MaterialPageRoute(builder: (_) => SearchLocation());
+      case '/additional-information':
+        return MaterialPageRoute(builder: (_) => AdditionalInformation());
+      case '/track-driver':
+      return MaterialPageRoute(builder: (_) => TrackDriver());
       default:
         return _errorRoute();
     }

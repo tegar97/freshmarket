@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:freshmarket/data/setting/url.dart';
+import 'package:freshmarket/models/VoucherModels.dart';
 import 'package:freshmarket/models/cartModels.dart';
 import 'package:freshmarket/models/categoryModels.dart';
 import 'package:freshmarket/models/paymentModels.dart';
@@ -11,7 +12,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PaymentService {
   String baseUrl = apiUrl;
 
-  Future<String> pay({List<CartModels>? carts, double? amount,String? api}) async {
+  Future<String> pay(
+      {List<CartModels>? carts,
+      double? amount,
+      String? api,
+      String? deliveryType,
+      VoucherModels? promo}) async {
+    print(promo?.code);
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
     var headers = {
@@ -19,11 +26,29 @@ class PaymentService {
       'Authorization': '$token'
     };
 
-    var url =
-        Uri.http(baseUrl, '/freshmarket/public/api/v1/order/${api}', {'q': '{http}'});
 
-    var body = jsonEncode({'item_list': carts, 'amount': amount});
+    var url = Uri.http(
+        baseUrl, '/api/v1/order/${api}', {'q': '{http}'});
+    var body;
+    print('promo nih ${promo?.code}');
+    if (promo?.code == null) {
+      body =
+          jsonEncode({'item_list': carts, 'amount': amount, 'promo': null, 'deliveryType' : deliveryType
+      });
+    } else {
+      body = jsonEncode({
+        'item_list': carts,
+        'amount': amount,
+        'deliveryType' : deliveryType,
+        'promo': {
+          'id': promo?.id,
+          'discount_percetange': promo?.discountPercetange,
+          'voucher_description': promo?.voucherDescription
+        }
+      });
+    }
 
+    print(body);
     var response = await http.post(url, body: body, headers: headers);
     print(response.body);
     if (response.statusCode == 200) {

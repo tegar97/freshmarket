@@ -24,8 +24,8 @@ List<ListPayment> servicePayment = [
   ListPayment(
       serviceName: 'Indomaret',
       serviceLogo: 'assets/images/indomaret.png',
-      isAvaible: true,
-      serviceApi: 'indomaret'
+      isAvaible: false,
+      serviceApi: 'indomaret2'
       ),
  
 ];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:freshmarket/models/transactionModels.dart';
+import 'package:freshmarket/navigation/navigation_utils.dart';
 import 'package:freshmarket/providers/store_provider.dart';
 import 'package:freshmarket/providers/transaction_providers.dart';
 import 'package:freshmarket/ui/global/widget/skeleton.dart';
@@ -68,7 +69,8 @@ class _ListOutletState extends State<TransactionList> {
                   if (snapshot.hasData) {
                     return Column(
                         children: transactions.transactions!
-                            .map((transaction) => TransactionBox(transaction : transaction))
+                            .map((transaction) =>
+                                TransactionBox(transaction: transaction))
                             .toList());
                   } else {
                     return Skeleton();
@@ -108,10 +110,7 @@ class _ListOutletState extends State<TransactionList> {
 }
 
 class TransactionBox extends StatelessWidget {
-  const TransactionBox({
-    Key? key,
-    required this.transaction
-  }) : super(key: key);
+  const TransactionBox({Key? key, required this.transaction}) : super(key: key);
   final TransactionModels transaction;
   @override
   Widget build(BuildContext context) {
@@ -126,19 +125,36 @@ class TransactionBox extends StatelessWidget {
             color: neutral20,
           )),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        //2 = Order Confirm
+        // 3 = packing
+        // 4 = send
+        // 5 = finish
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Color(0xffFFF5F5),
+                  color: secondaryColor,
                   borderRadius: BorderRadius.circular(5),
                 ),
-                child: Text("Confirmed",
+                child: Text(
+                    transaction.status == 2
+                        ? "Confirmed"
+                        : transaction.status == 3
+                            ? 'Packing'
+                            : transaction.status == 4
+                                ? 'Dikirim'
+                                : transaction.status == 5
+                                    ? 'finish'
+                                    : '',
                     style: headerTextStyle.copyWith(
                         fontSize: 15,
-                        color: Color(0xffFF4949),
+                        color: primaryColor,
                         fontWeight: FontWeight.w600)),
               ),
               Expanded(child: SizedBox()),
@@ -146,46 +162,71 @@ class TransactionBox extends StatelessWidget {
                 margin: EdgeInsets.only(right: 5),
                 padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
                 decoration: BoxDecoration(
-                    color: Color(0xffFFF5F5),
+                    color: transaction.status == 2 ||
+                            transaction.status == 3 ||
+                            transaction.status == 4
+                        ? secondaryColor
+                        : lightModeBgColor,
                     borderRadius: BorderRadius.circular(100)),
                 child: Icon(
                   Icons.check,
-                  color: Color(0xffFF4949),
+                  color: transaction.status == 2 ||
+                          transaction.status == 3 ||
+                          transaction.status == 4 ||
+                          transaction.status == 5
+                      ? primaryColor
+                      : neutral60,
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(right: 5),
                 padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
                 decoration: BoxDecoration(
-                    color: lightModeBgColor,
+                    color: transaction.status == 3 ||
+                            transaction.status == 4 ||
+                            transaction.status == 5
+                        ? secondaryColor
+                        : lightModeBgColor,
                     borderRadius: BorderRadius.circular(100),
                     border: Border.all(color: neutral20)),
                 child: Icon(
                   Icons.card_giftcard,
-                  color: neutral60,
+                  color: transaction.status == 3 ||
+                          transaction.status == 4 ||
+                          transaction.status == 5
+                      ? primaryColor
+                      : neutral60,
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(right: 5),
                 padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
                 decoration: BoxDecoration(
-                    color: lightModeBgColor,
+                    color: transaction.status == 4 || transaction.status == 5
+                        ? secondaryColor
+                        : lightModeBgColor,
                     borderRadius: BorderRadius.circular(100),
                     border: Border.all(color: neutral20)),
                 child: Icon(
-                  Icons.local_shipping,
-                  color: neutral60,
+                  transaction.deliveryType == 'pickup'
+                      ? Icons.shopping_basket
+                      : Icons.local_shipping,
+                  color: transaction.status == 4 || transaction.status == 5
+                      ? primaryColor
+                      : neutral60,
                 ),
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
                 decoration: BoxDecoration(
-                    color: lightModeBgColor,
+                    color: transaction.status == 5
+                        ? secondaryColor
+                        : lightModeBgColor,
                     borderRadius: BorderRadius.circular(100),
                     border: Border.all(color: neutral20)),
                 child: Icon(
                   Icons.emoji_flags,
-                  color: neutral60,
+                  color: transaction.status == 5 ? primaryColor : neutral60,
                 ),
               ),
             ],
@@ -193,6 +234,14 @@ class TransactionBox extends StatelessWidget {
           SizedBox(
             height: 30,
           ),
+          // Column(
+          //   crossAxisAlignment:CrossAxisAlignment.start ,
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   children: [
+          //     Text("Pesanan mu sudah kami terima",textAlign: TextAlign.left,)
+          //   ],
+          // ),
+
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -231,13 +280,41 @@ class TransactionBox extends StatelessWidget {
                   SizedBox(
                     height: 4,
                   ),
-                  Text("${CurrencyFormat.convertToIdr(transaction.amount,0)}",
+                  Text("${CurrencyFormat.convertToIdr(transaction.amount, 0)}",
                       style: headerTextStyle.copyWith(
                           fontSize: 15, fontWeight: FontWeight.w600)),
                 ],
               ),
             ],
-          )
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          transaction.deliveryType == 'pickup' && transaction.status == 4
+              ? ElevatedButton(
+                  onPressed: () {
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    primary: Colors.white,
+                    minimumSize: Size(double.infinity, 50),
+                  ),
+                  child: Text("Belanjaan mu siap diambil "),
+                )
+              : SizedBox(),
+          transaction.deliveryType == 'kurir' && transaction.status == 4
+              ? ElevatedButton(
+                  onPressed: () {
+                    navigate.pushTo('/track-driver');
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    primary: Colors.white,
+                    minimumSize: Size(double.infinity, 50),
+                  ),
+                  child: Text("Track"),
+                )
+              : SizedBox()
         ],
       ),
     );

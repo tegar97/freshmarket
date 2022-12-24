@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freshmarket/navigation/navigation_utils.dart';
 import 'package:freshmarket/providers/payment_data_providers.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:freshmarket/ui/pages/LoadPaymentScreen.dart';
@@ -11,9 +12,8 @@ class PaymentCodeScreen extends StatelessWidget {
   const PaymentCodeScreen({Key? key, this.paymentId}) : super(key: key);
   final String? paymentId;
   @override
-  
   Widget build(BuildContext context) {
-    PaymentDataProvider paymentProvider = 
+    PaymentDataProvider paymentProvider =
         Provider.of<PaymentDataProvider>(context);
 
     return Scaffold(
@@ -246,7 +246,14 @@ class PaymentCodeScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                    Text("Kembali ke halaman home",textAlign: TextAlign.center,style: primaryTextStyle.copyWith(fontSize: 14,fontWeight: FontWeight.w600))
+                      GestureDetector(
+                          onTap: () {
+                            navigate.pushTo('/home');
+                          },
+                          child: Text("Kembali ke halaman home",
+                              textAlign: TextAlign.center,
+                              style: primaryTextStyle.copyWith(
+                                  fontSize: 14, fontWeight: FontWeight.w600)))
                     ],
                   )));
   }

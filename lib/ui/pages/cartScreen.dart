@@ -1,26 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:freshmarket/data/content/populer_product.dart';
 import 'package:freshmarket/models/cartModels.dart';
+import 'package:freshmarket/navigation/navigation_utils.dart';
 import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
 import 'package:freshmarket/providers/product_providers.dart';
+import 'package:freshmarket/ui/Widget/product/product_item.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:freshmarket/ui/pages/checkoutScreen.dart';
 import 'package:freshmarket/ui/pages/homeScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:freshmarket/data/setting/url.dart';
 import 'package:freshmarket/helper/convertRupiah.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   CartScreen({Key? key}) : super(key: key);
 
   @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  void initState() {
+    super.initState();
+
+  }
+
+  // void getInit() async {
+  //   await Provider.of<AddressProvider>(context, listen: false)
+  //       .getSelectedAddress();
+  //           await Provider.of<AddressProvider>(context, listen: false)
+  //       .getListAddress();
+  // }
+
+  @override
   Widget build(BuildContext context) {
-  ProductProvider productProvider = Provider.of<ProductProvider>(context);
+    ProductProvider productProvider = Provider.of<ProductProvider>(context);
     CartProvider cartProvider = Provider.of<CartProvider>(context);
     AddressProvider addressProvider = Provider.of<AddressProvider>(context);
     double widthDevice = MediaQuery.of(context).size.width;
-    print('check ${addressProvider.listAddress.length}');
+
     return Scaffold(
       backgroundColor: Color(0xffFAFAFA),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -31,7 +51,8 @@ class CartScreen extends StatelessWidget {
         child: cartProvider.carts.length > 0
             ? FloatingActionButton.extended(
                 onPressed: () {
-                  if (addressProvider.listAddress.length > 0) {
+                  print(' asdasdaddress ${addressProvider.listAddress!.isEmpty}');
+                  if (!addressProvider.listAddress!.isEmpty) {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -39,7 +60,7 @@ class CartScreen extends StatelessWidget {
                                   carts: cartProvider.carts,
                                 )));
                   } else {
-                    Navigator.pushNamed(context, '/address');
+                    navigate.pushTo('/additional-information');
                   }
                 },
                 label: Row(
@@ -175,8 +196,8 @@ class CartScreen extends StatelessWidget {
                       height: 214,
                       child: ListView(
                           scrollDirection: Axis.horizontal,
-                          children: productProvider.products
-                              .map((product) => ProductContainer(
+                          children: productProvider.product!
+                              .map((product) => ProductItem(
                                   widthDevice: widthDevice, product: product))
                               .toList()),
                     )

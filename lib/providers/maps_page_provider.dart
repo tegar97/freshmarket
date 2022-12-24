@@ -1,0 +1,83 @@
+import 'package:flutter/material.dart';
+import 'package:freshmarket/providers/get_location_provider.dart';
+import 'package:freshmarket/providers/maps_provider.dart';
+import 'package:provider/provider.dart';
+
+class PageProvider extends ChangeNotifier {
+  //------------------------//
+  //   PROPERTY SECTIONS    //
+  //------------------------//
+
+  /// Pageview Controller
+  PageController? _pageController;
+  PageController? get pageController => _pageController;
+
+  /// Page number
+  double? _page = 0;
+  double? get page => _page;
+
+  /// Current page number
+  int _currentPage = 0;
+  int get currentPage => _currentPage;
+
+  /// Pager Height
+  double pageHeight = 140;
+
+  /// Positoned location
+  double _bottomPosition = 0;
+  double get bottomPosition => _bottomPosition;
+
+  /// Property for page view animations
+  double viewPortFraction = 0.9;
+  double scaleFraction = 0.7;
+  double fullScale = 1.0;
+
+  //------------------------//
+  //   FUNCTION SECTIONS   //
+  //------------------------//
+
+  /// Function to initialize page controller
+  void initController() async {
+    await Future.delayed(Duration(milliseconds: 100));
+    _pageController = PageController(
+        initialPage: currentPage, viewportFraction: viewPortFraction);
+    notifyListeners();
+  }
+
+  /// Function to change page position to controller
+  void changePagePosition() async {
+    _page = pageController!.page;
+    notifyListeners();
+  }
+
+  // // /// Function to change current Page Index
+  // void changeCurrentPage(int position, BuildContext context) {
+  //   _currentPage = position;
+  //   final mapProv = Provider.of<MapProvider>(context, listen: false);
+  //   mapProv.changeCameraPosition(mapProv.outletList[position].location!,
+  //       useBearing: true);
+  //   mapProv.setSelected(mapProv.outletList[position]);
+  //   notifyListeners();
+  // }
+
+  /// Function to change current page location
+  void navigatePageTo(int position) {
+    _pageController!.jumpToPage(position);
+    notifyListeners();
+  }
+
+  /// Function to reset pageview
+  void resetPageView() {
+    _currentPage = 0;
+    _page = 0;
+    initController();
+    notifyListeners();
+  }
+
+  /// Function to update bottom Position
+  void updateBottomPosition(double position) async {
+    await Future.delayed(Duration(milliseconds: 100));
+    _bottomPosition = position;
+    notifyListeners();
+  }
+}

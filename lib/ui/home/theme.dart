@@ -28,6 +28,7 @@ TextStyle whiteTextStyle = GoogleFonts.inter(color: neutral20);
 
 
 TextStyle subtitleTextStyle2 = GoogleFonts.poppins(color: neutral70);
+
 TextStyle typeHeading = GoogleFonts.dmSans(color: primaryColor);
 TextStyle typetitle = GoogleFonts.dmSans(color: neutral70);
 

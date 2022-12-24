@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:freshmarket/data/content/listPayment.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
 import 'package:freshmarket/providers/payment_providers.dart';
+import 'package:freshmarket/ui/Widget/snackbar/snackbar_item.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:freshmarket/ui/pages/LoadPaymentScreen.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,7 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
   Widget build(BuildContext context) {
     PaymentProvider paymentProvider = Provider.of<PaymentProvider>(context);
     CartProvider cartProvider = Provider.of<CartProvider>(context);
-
+   
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Container(
@@ -31,6 +32,8 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
             String? result = await paymentProvider.pay(
                 carts: cartProvider.carts,
                 amount: cartProvider.totalPrice(),
+                promo: cartProvider.voucher,
+                
                 api: bankSelect);
             print(bankSelect);
             cartProvider.clearCart();
@@ -75,9 +78,12 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                   children: servicePayment.map((payment) {
                 return GestureDetector(
                   onTap: () {
-                    setState(() {
-                      bankSelect = payment.serviceApi;
-                    });
+                    print(payment.isAvaible);
+                    payment.isAvaible == true
+                        ? setState(() {
+                            bankSelect = payment.serviceApi;
+                          })
+                        : showSnackbar(title: 'Sedang gangguan');
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 13, vertical: 11),
@@ -85,7 +91,9 @@ class _PaymentListScreenState extends State<PaymentListScreen> {
                     decoration: BoxDecoration(
                         color: bankSelect == payment.serviceApi
                             ? Color(0xffF2FBF8)
-                            : neutral20,
+                            : payment.isAvaible == true
+                                ? neutral20
+                                : alertColorSurface,
                         borderRadius: BorderRadius.circular(11),
                         border: Border.all(
                           color: bankSelect == payment.serviceApi

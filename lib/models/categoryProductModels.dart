@@ -1,22 +1,23 @@
+import 'package:freshmarket/models/api/api_result_model.dart';
 import 'package:freshmarket/models/productModels.dart';
 
-class CategoryProductModels {
+class CategoryProductModels  extends Serializable{
   int? id;
-  String? name;
-  String? icon;
+  String? title;
+  // String? icon;
   List<ProductModels>? products;
 
-  CategoryProductModels({this.name, this.id, this.products, this.icon});
+  CategoryProductModels({this.title, this.id, this.products});
   CategoryProductModels.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
+    title = json['title'];
     products = List<ProductModels>.from(
         json["products"].map((x) => ProductModels.fromJson(x)));
-    icon = json['icon'];
+   
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name, 'icon': icon,         "products": List<dynamic>.from(products!.map((x) => x.toJson())),
+    return {'id': id, 'title': title,         "products": List<dynamic>.from(products!.map((x) => x.toJson())),
     };
   }
 }

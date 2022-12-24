@@ -1,10 +1,18 @@
 import 'package:flutter/widgets.dart';
+import 'package:freshmarket/models/VoucherModels.dart';
 import 'package:freshmarket/models/cartModels.dart';
 import 'package:freshmarket/models/productModels.dart';
 
 class CartProvider with ChangeNotifier {
   List<CartModels> _carts = [];
   List<CartModels> get carts => _carts;
+
+  bool? isUseVoucher = false;
+  int? discountValue;
+  int? price;
+  int? TotalPrice;
+
+  VoucherModels voucher = VoucherModels();
 
   set carts(List<CartModels> carts) {
     _carts = carts;
@@ -38,6 +46,9 @@ class CartProvider with ChangeNotifier {
 
   clearCart() {
     _carts.clear();
+    isUseVoucher = false;
+    voucher = VoucherModels();
+    discountValue = 0;
     notifyListeners();
   }
 
@@ -67,10 +78,24 @@ class CartProvider with ChangeNotifier {
     return total;
   }
 
+  totalPriceProduct() {
+    double total = 0;
+    for (var item in _carts) {
+      total += ((item.quantity ?? 0) * (item?.product?.price ?? 0));
+    }
+
+    return total;
+  }
+
   totalPrice() {
     double total = 0;
     for (var item in _carts) {
       total += ((item.quantity ?? 0) * (item?.product?.price ?? 0));
+    }
+    print('Voucher ID => ${voucher.id}');
+    if (isUseVoucher == true) {
+      total = total - discountValue!;
+      print(total * discountValue!);
     }
     return total;
   }
@@ -83,5 +108,30 @@ class CartProvider with ChangeNotifier {
     } else {
       return true;
     }
+  }
+
+  usePromo() {
+    isUseVoucher = true;
+    notifyListeners();
+  }
+
+  unusedPromo() {
+    isUseVoucher = false;
+    notifyListeners();
+  }
+
+  getVoucherInfo(VoucherModels voucherData) {
+    voucher = voucherData;
+    notifyListeners();
+  }
+
+  getDiscountvalue(double discountPercetange) {
+    double total = 0;
+    for (var item in _carts) {
+      total += ((item.quantity ?? 0) * (item?.product?.price ?? 0));
+    }
+    discountValue = (total * discountPercetange / 100).round();
+
+    notifyListeners();
   }
 }

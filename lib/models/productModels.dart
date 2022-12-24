@@ -1,4 +1,6 @@
-class ProductModels {
+import 'api/api_result_model.dart';
+
+class ProductModels  extends Serializable {
   int? id;
   String? name;
   String? description;

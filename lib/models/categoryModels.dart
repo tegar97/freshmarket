@@ -1,4 +1,6 @@
-class CategoryModels {
+import 'api/api_result_model.dart';
+
+class CategoryModels  extends Serializable {
   int? id;
   String? name;
   int? bgColor;

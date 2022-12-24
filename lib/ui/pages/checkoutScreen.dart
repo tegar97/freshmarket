@@ -3,7 +3,10 @@ import 'package:freshmarket/models/addressModels.dart';
 import 'package:freshmarket/models/cartModels.dart';
 import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/cart_providers.dart';
+import 'package:freshmarket/providers/payment_providers.dart';
 import 'package:freshmarket/providers/store_provider.dart';
+import 'package:freshmarket/ui/Widget/loading/loading_typeHorizontal.dart';
+import 'package:freshmarket/ui/Widget/voucher_list/voucher_list.dart';
 import 'package:freshmarket/ui/global/widget/skeleton.dart';
 import 'package:freshmarket/ui/home/theme.dart';
 import 'package:intl/intl.dart';
@@ -31,7 +34,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   }
 
   getInit() async {
-    await Provider.of<AddressProvider>(context, listen: false).getMyAddress();
+    // await Provider.of<AddressProvider>(context, listen: false).getSelectedAddress();
     await Provider.of<StoreProvider>(context, listen: false).getNearStore();
   }
 
@@ -50,7 +53,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     AddressProvider addressProvider = Provider.of<AddressProvider>(context);
     StoreProvider nearOutlet = Provider.of<StoreProvider>(context);
     CartProvider cart = Provider.of<CartProvider>(context);
-    print(addressProvider.address.city);
+    PaymentProvider paymentProv = Provider.of<PaymentProvider>(context);
+
     final dates = <Widget>[];
 
     for (int i = 1; i < 5; i++) {
@@ -79,6 +83,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
         future: delay,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            print('outlet ${nearOutlet.store.distance}');
             return (nearOutlet.store.distance ?? 0) < 25
                 ? Container(
                     padding: EdgeInsets.symmetric(horizontal: 16),
@@ -95,7 +100,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     width: double.infinity,
                     child: FloatingActionButton.extended(
-                      onPressed: () {},
+                      onPressed: () {
+                        //temporarly
+                        // Navigator.pushNamed(context, '/payment-list');
+                      },
                       label: Text('Bayar'),
                       backgroundColor: neutral60,
                     ),
@@ -107,7 +115,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       ),
       backgroundColor: Color(0xffFAFAFA),
       appBar: AppBar(
-        title: Text("Cart",
+        title: Text("Checkout",
             style: headerTextStyle.copyWith(
                 fontSize: 18, fontWeight: FontWeight.w600)),
         centerTitle: true,
@@ -120,6 +128,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
           ),
           tooltip: 'Kembali ke halaman product',
           onPressed: () {
+            cart.unusedPromo();
             // handle the press
             Navigator.pop(context);
           },
@@ -152,77 +161,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           child: Text("Ganti", style: primaryTextStyle))
                     ],
                   ),
-                  FutureBuilder(
-                      future: delay,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return addressProvider.myAddress.label == null
-                              ? Text("no data")
-                              : Container(
-                                  width: double.infinity,
-                                  margin: EdgeInsets.only(top: 20),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 13, vertical: 11),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(11),
-                                      border: Border.all(
-                                        color: neutral30,
-                                      )),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                              "${addressProvider.myAddress.label ?? "no data"}",
-                                              style: headerTextStyle.copyWith(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w600)),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          Container(
-                                            width: 4,
-                                            height: 4,
-                                            decoration: BoxDecoration(
-                                                color: Colors.black,
-                                                borderRadius:
-                                                    BorderRadius.circular(100)),
-                                          ),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          Text(
-                                              "${addressProvider.myAddress.phoneNumber ?? "no data"} ",
-                                              style: subtitleTextStyle)
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                          "${addressProvider.myAddress.fullAddress ?? "no data"} ",
-                                          style: subtitleTextStyle)
-                                    ],
-                                  ));
-                        } else {
-                          return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [],
-                                ),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                Skeleton()
-                              ]);
-                        }
-                      })
+                  AddressBoxContainer()
                 ],
               ),
             ),
@@ -254,7 +193,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               ),
                               GestureDetector(
                                   onTap: () {
-                                    Navigator.pushNamed(context, '/list-outlet');
+                                    Navigator.pushNamed(
+                                        context, '/list-outlet');
                                   },
                                   child: Text("Lihat list outlet",
                                       style: primaryTextStyle.copyWith(
@@ -291,36 +231,42 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                     SizedBox(
                                       width: 12,
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            'Outlet terdekat (${(nearOutlet.store.distance ?? 0) < 1 ? (((nearOutlet.store.distance ?? 0) * 1000).toInt()) : nearOutlet.store.distance!.toInt()} ${(nearOutlet.store.distance ?? 0) < 1 ? 'M' : 'KM'})',
-                                            style: headerTextStyle.copyWith(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600)),
-                                        SizedBox(
-                                          height: 3,
-                                        ),
-                                        Text("${nearOutlet.store.name}",
-                                            style:
-                                                subtitleTextStyle.copyWith()),
-                                        SizedBox(
-                                          height: 35,
-                                        ),
-                                        Text('Lokasi Kamu',
-                                            style: headerTextStyle.copyWith(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600)),
-                                        SizedBox(
-                                          height: 3,
-                                        ),
-                                        Text(
-                                            '${addressProvider.myAddress.label}',
-                                            style:
-                                                subtitleTextStyle.copyWith()),
-                                      ],
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Container(
+                                      width: widthDevice * 0.7,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                              'Outlet terdekat (${(nearOutlet.store.distance ?? 0) < 1 ? (((nearOutlet.store.distance ?? 0) * 1000).toInt()) : nearOutlet.store.distance!.toInt()} ${(nearOutlet.store.distance ?? 0) < 1 ? 'M' : 'KM'})',
+                                              style: headerTextStyle.copyWith(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600)),
+                                          SizedBox(
+                                            height: 3,
+                                          ),
+                                          Text("${nearOutlet.store.name}",
+                                              style:
+                                                  subtitleTextStyle.copyWith()),
+                                          SizedBox(
+                                            height: 35,
+                                          ),
+                                          Text('Lokasi Kamu',
+                                              style: headerTextStyle.copyWith(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600)),
+                                          Text(
+                                              "${addressProvider.selectedAddress?.fullAddress}",
+                                              style:
+                                                  subtitleTextStyle.copyWith()),
+                                          SizedBox(
+                                            height: 3,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 )
@@ -349,6 +295,124 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           ]);
                     }
                   }),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+                color: lightModeBgColor,
+                padding:
+                    EdgeInsets.only(left: 16, right: 16, bottom: 20, top: 20),
+                child: Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Kode Promo",
+                          style: headerTextStyle.copyWith(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    GestureDetector(
+                        onTap: (() {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.92,
+                                color: Colors.white,
+                                child: Scaffold(
+                                    body:
+                                        VoucherButtomSheet(isMyVoucher: true))),
+                          );
+                        }),
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: Text(
+                              "Voucher",
+                              style: subtitleTextStyle.copyWith(fontSize: 14),
+                            )),
+                            Text(
+                              "Pilih voucher",
+                              style: subtitleTextStyle.copyWith(fontSize: 14),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(Icons.arrow_forward_ios,
+                                color: neutral70, size: 15)
+                          ],
+                        ))
+                  ],
+                )),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+              width: double.infinity,
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Pengiriman",
+                        style: headerTextStyle.copyWith(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  
+                  ListTile(
+                    title: const Text('Pesan Antar'),
+                    contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+
+                    selectedColor: primaryColor,
+                    leading: Radio<DeliveryType>(
+                      value: DeliveryType.courir,
+                          fillColor: MaterialStateColor.resolveWith(
+                          (states) => primaryColor),
+                      groupValue: paymentProv.deliveryType,
+                      onChanged: (DeliveryType? value) {
+                        paymentProv.changeDeliveryType(value);
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    title: const Text('Self Pickup'),
+                    contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+
+                    leading: Radio<DeliveryType>(
+                      value: DeliveryType.pickup,
+                        fillColor: MaterialStateColor.resolveWith(
+                          (states) => primaryColor),
+                      groupValue: paymentProv.deliveryType,
+              
+                      onChanged: (DeliveryType? value) {
+                        setState(() {
+                          paymentProv.changeDeliveryType(value);
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
             SizedBox(
               height: 20,
@@ -472,7 +536,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         children: [
                           Expanded(child: Text("Total harga product")),
                           Text(
-                              "${CurrencyFormat.convertToIdr(cart.totalPrice(), 0)}",
+                              "${CurrencyFormat.convertToIdr(cart.totalPriceProduct(), 0)}",
                               style: headerTextStyle.copyWith(
                                   fontWeight: FontWeight.w600))
                         ],
@@ -486,6 +550,20 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                   fontWeight: FontWeight.w600))
                         ],
                       ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      cart.isUseVoucher ?? false
+                          ? Row(
+                              children: [
+                                Expanded(child: Text("Potongan harga")),
+                                Text(
+                                    "${CurrencyFormat.convertToIdr(cart.discountValue, 0)}",
+                                    style: headerTextStyle.copyWith(
+                                        fontWeight: FontWeight.w600))
+                              ],
+                            )
+                          : Row(),
                       SizedBox(
                         height: 20,
                       ),
@@ -629,5 +707,36 @@ class ProductCheckout extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class AddressBoxContainer extends StatelessWidget {
+  AddressBoxContainer();
+  Widget build(BuildContext context) {
+    return Consumer<AddressProvider>(builder: (context, addressProv, _) {
+      print(addressProv.selectedAddress);
+      if (addressProv.listAddress == null && !addressProv.onSearch) {
+        addressProv.getListAddress();
+        addressProv.getSelectedAddress();
+        return const Text("loading");
+      }
+      if (addressProv.listAddress == null && addressProv.onSearch) {
+        return const Text("loading");
+      }
+
+      return Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(top: 20),
+        padding: EdgeInsets.symmetric(horizontal: 13, vertical: 11),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(11),
+            border: Border.all(
+              color: neutral30,
+            )),
+        child: Text("${addressProv.selectedAddress?.fullAddress ?? "no data"}",
+            style: headerTextStyle.copyWith(
+                fontSize: 15, fontWeight: FontWeight.w500)),
+      );
+    });
   }
 }

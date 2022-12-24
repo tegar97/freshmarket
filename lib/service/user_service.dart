@@ -15,17 +15,15 @@ class UserService {
     final prefs = await SharedPreferences.getInstance();
 
     var url = Uri.http(
-        baseUrl, '/freshmarket/public/api/v1/register', {'q': '{http}'});
+        baseUrl, '/api/v1/register', {'q': '{http}'});
 
     var body = jsonEncode({
       'name': name,
       'email': email,
       'password': password,
     });
-    print(body);
 
     var response = await http.post(url, body: body, headers: headers);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
 
@@ -48,16 +46,14 @@ class UserService {
     final prefs = await SharedPreferences.getInstance();
 
     var url = Uri.http(
-        baseUrl, '/freshmarket/public/api/v1/login', {'q': '{http}'});
+        baseUrl, '/api/v1/login', {'q': '{http}'});
 
     var body = jsonEncode({
       'email': email,
       'password': password,
     });
-    print(body);
 
     var response = await http.post(url, body: body, headers: headers);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
 
@@ -81,7 +77,7 @@ class UserService {
     var headers = {'Content-Type': 'application/json', 'Authorization': '${token}'};
 
     var url =
-        Uri.http(baseUrl, '/freshmarket/public/api/v1/getMe', {'q': '{http}'});
+        Uri.http(baseUrl, '/api/v1/getMe', {'q': '{http}'});
     var response = await http.get(url, headers: headers);
 
     if (response.statusCode == 200) {

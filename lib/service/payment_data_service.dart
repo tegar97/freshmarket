@@ -12,7 +12,7 @@ class PaymentDataService {
   Future<PaymentDataModels> getPaymentData(String? paymentId) async {
     var headers = {'Content-Type': 'application/json'};
 
-    var url = Uri.http(baseUrl, '/freshmarket/public/api/v1/payment-code',
+    var url = Uri.http(baseUrl, '/api/v1/payment-code',
         {'q': '{http}', 'transaction_id': "${paymentId}"});
     var response = await http.get(url);
     print(response.body);

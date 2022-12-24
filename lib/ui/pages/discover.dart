@@ -118,6 +118,7 @@ class RecipeBox extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: 200,
+        margin : EdgeInsets.only(bottom: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           image: DecorationImage(

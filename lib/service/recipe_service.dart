@@ -13,17 +13,15 @@ class RecipeService {
     var headers = {'Content-Type': 'application/json'};
 
     var url =
-        Uri.http(baseUrl, '/freshmarket/public/api/v1/recipe', {'q': '{http}'});
+        Uri.http(baseUrl, '/api/v1/recipe', {'q': '{http}'});
     var response = await http.get(url);
 
-    print(response.body);
     if (response.statusCode == 200) {
      var data = jsonDecode(response.body)['data'];
 
       List<Recipe> recipe = [];
 
       for (var item in data) {
-        print(item);
         recipe.add(Recipe.fromJson(item));
       }
       return recipe;

@@ -60,19 +60,22 @@ class _ListOutletState extends State<ListOutlet> {
                 future: delay,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return 
-                    Column(
-                      children:listOutlet.listStore.map((store) {
-                          return  Container(
-                            width: double.infinity,
+                    return Column(
+                        children: listOutlet.listStore.map((store) {
+                      return Container(
+                        width: double.infinity,
                         margin: EdgeInsets.only(bottom: 20),
                         padding:
                             EdgeInsets.symmetric(horizontal: 13, vertical: 11),
                         decoration: BoxDecoration(
-                          color: (store.distance ?? 0) > 25 ? alertColorSurface : lightModeBgColor,
+                            color: (store.distance ?? 0) > 25
+                                ? alertColorSurface
+                                : lightModeBgColor,
                             borderRadius: BorderRadius.circular(11),
                             border: Border.all(
-                              color:   (store.distance ?? 0) > 25 ? alertColor : neutral20 ,
+                              color: (store.distance ?? 0) > 25
+                                  ? alertColor
+                                  : neutral20,
                             )),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,20 +88,18 @@ class _ListOutletState extends State<ListOutlet> {
                             SizedBox(
                               height: 8,
                             ),
-                            Text(" ${(store.distance ?? 0) < 1 ? (((store.distance ?? 0) * 1000).toInt()) : store.distance!.toInt()} ${(store.distance ?? 0) < 1 ? 'M' : 'KM'} dari jarak lokasi anda",
+                            Text(
+                                " ${(store.distance ?? 0) < 1 ? (((store.distance ?? 0) * 1000).toInt()) : store.distance!.toInt()} ${(store.distance ?? 0) < 1 ? 'M' : 'KM'} dari jarak lokasi anda",
                                 style: subtitleTextStyle.copyWith(fontSize: 13))
                           ],
                         ),
                       );
-                      
-                    }).toList()
-                    );
-                    
+                    }).toList());
                   } else {
                     return Skeleton();
                   }
                 })
- 
+
             // Container(
             //   margin: EdgeInsets.only(bottom: 20),
             //   padding: EdgeInsets.symmetric(horizontal: 13, vertical: 11),

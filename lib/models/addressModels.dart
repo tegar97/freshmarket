@@ -1,4 +1,6 @@
-class AddressModels {
+import 'package:freshmarket/models/api/api_result_model.dart';
+
+class AddressModels  extends Serializable {
   int? id;
   int? usersId;
   String? fullAddress;

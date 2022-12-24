@@ -19,9 +19,8 @@ class StoreService {
     var queryParameters = {'q': '{http}'};
 
     var url = Uri.http(
-        baseUrl, '/freshmarket/public/api/v1/getNearOutlet', queryParameters);
+        baseUrl, '/api/v1/getNearOutlet', queryParameters);
     var response = await http.get(url, headers: headers);
-    print(response.body);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)['data'];
@@ -44,9 +43,8 @@ class StoreService {
     var queryParameters = {'q': '{http}'};
 
     var url = Uri.http(
-        baseUrl, '/freshmarket/public/api/v1/getAllOutlet', queryParameters);
+        baseUrl, '/api/v1/getAllOutlet', queryParameters);
     var response = await http.get(url, headers: headers);
-    print(response.body);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)['data'];

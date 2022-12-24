@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:freshmarket/providers/address_providers.dart';
 import 'package:freshmarket/providers/auth_providers.dart';
 import 'package:freshmarket/ui/home/theme.dart';
+import 'package:freshmarket/ui/pages/addAddressScareen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -114,9 +116,10 @@ class ProfileScreen extends StatelessWidget {
                     SharedPreferences localStorage =
                         await SharedPreferences.getInstance();
         
-
+                  // AddressProvider.instance(context).clearAddress();
                     localStorage.remove('user');
                     localStorage.remove('token');
+
                     Navigator.pushReplacementNamed(context, '/login');
                   },
                   child: Row(

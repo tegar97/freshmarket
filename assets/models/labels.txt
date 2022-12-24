@@ -1,0 +1,5 @@
+0 Apel
+1 Jeruk
+2 Tomat
+3 Popato
+4 Pepaya

@@ -1,4 +1,6 @@
-class VoucherModels {
+import 'package:freshmarket/models/api/api_result_model.dart';
+
+class VoucherModels extends Serializable {
   int? id;
   String? code;
   String? voucherDescription;

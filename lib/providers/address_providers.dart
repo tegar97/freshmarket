@@ -1,109 +1,154 @@
 import 'package:flutter/material.dart';
+import 'package:freshmarket/injection.dart';
 import 'package:freshmarket/models/addressModels.dart';
 import 'package:freshmarket/service/address_service.dart';
+import 'package:provider/provider.dart';
 
 class AddressProvider with ChangeNotifier {
-  AddressModels? _address = AddressModels(
-     id: 0,
-      label : '',
-      districts : '',
-      usersId: 0,
-      fullAddress: '',
-      province : '',
-      city : '',
-      phoneNumber : "",
-      isMainAddress : 0,
-      createdAt :"",
-      updatedAt : ""
-    
-  );
-  List<AddressModels> _listAddress = [];
+  AddressModels? _address = AddressModels();
+  bool isDisposed = false;
 
-  AddressModels get address => _address!;
-  AddressModels get myAddress => _address!;
-  List<AddressModels> get listAddress => _listAddress;
-  set address(AddressModels address) {
-    _address = address;
+  /// Event handling
+  bool _onSearch = false;
+  bool get onSearch => _onSearch;
+
+  /// List of category
+  List<AddressModels>? _listAddress;
+  List<AddressModels>? get listAddress => _listAddress;
+
+  /// List of category
+  bool? _isAvailable;
+  bool? get isAvailable => _isAvailable;
+
+  //Selected Address
+  AddressModels? _selectedAddress;
+  AddressModels? get selectedAddress => _selectedAddress;
+
+  final addressService = locator<AddressService>();
+
+  static AddressProvider instance(BuildContext context) =>
+      Provider.of(context, listen: false);
+
+  Future<void> getListAddress() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    setOnSearch(true);
+
+    try {
+      print('cuakkssss');
+      final result = await addressService.getAllAddress();
+      print(
+        'data now list address ==>  ${result.data}',
+      );
+
+      if (result.meta.code == 200) {
+        _listAddress = result.data;
+        notifyListeners();
+      } else {
+        _listAddress = null;
+      }
+    } catch (e, stacktrace) {
+      debugPrint("Error: ${e.toString()}");
+      debugPrint("Stacktrace: ${stacktrace.toString()}");
+      _listAddress = null;
+    }
+    setOnSearch(false);
+  }
+
+  Future<void> getSelectedAddress() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    setOnSearch(true);
+
+    try {
+      final result = await addressService.getSelectedAddress();
+      print(
+        'data now ==>  ${result.data}',
+      );
+
+      if (result.meta.code == 200) {
+        _selectedAddress = result.data;
+        notifyListeners();
+      } else {
+        _selectedAddress = null;
+      }
+    } catch (e, stacktrace) {
+      _selectedAddress = null;
+      debugPrint("Error: ${e.toString()}");
+      debugPrint("Stacktrace: ${stacktrace.toString()}");
+    }
+    setOnSearch(false);
+  }
+
+  Future<void> addAddress(String? token, AddressModels? data) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    setOnSearch(true);
+
+    try {
+      setOnSearch(true);
+      final result = await addressService.addAddress(token, data);
+      print(
+        'data now ==>  ${result.data}',
+      );
+
+      // if (result.meta.code == 200) {
+      //   _listAddress = result.data;
+      //   notifyListeners();
+      // } else {
+      //   _listAddress = [];
+      // }
+    } catch (e, stacktrace) {
+      debugPrint("Error: ${e.toString()}");
+      debugPrint("Stacktrace: ${stacktrace.toString()}");
+      _listAddress = [];
+    }
+    setOnSearch(false);
+  }
+
+  Future<void> CheckCity(String? cityName) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    setOnSearch(true);
+
+    try {
+      setOnSearch(true);
+      final result = await addressService.checkAddress(cityName);
+      print(
+        'data now new ==>  ${result.data?['data']}',
+      );
+
+      if (result.data?['data'] == true) {
+        _isAvailable = true;
+        notifyListeners();
+      } else {
+          _isAvailable = false;
+      }
+    } catch (e, stacktrace) {
+      debugPrint("Error: ${e.toString()}");
+      debugPrint("Stacktrace: ${stacktrace.toString()}");
+    }
+    setOnSearch(false);
+  }
+
+  void clearAddress() {
+    _address = null;
+    _listAddress = null;
     notifyListeners();
   }
 
-  set listAddress(List<AddressModels> listAddress) {
-    _listAddress = listAddress;
+  /// Set event search
+  void setOnSearch(bool value) {
+    _onSearch = value;
     notifyListeners();
   }
 
-  set myAddress(AddressModels myAddress) {
-    _address = myAddress;
-    notifyListeners();
-  }
-
-  Future<bool> addAddress(
-      {String? label,
-      String? province,
-      String? city,
-      String? districts,
-      String? phoneNumber,
-      bool? isMainAddress,
-      String? street,
-      String? longitude,
-      String? latitude,
-      String? fullAddress}) async {
-    try {
-      bool address = await AddressService().addAddress(
-          province: province,
-          phoneNumber: phoneNumber,
-          districts: districts,
-          city: city,
-          isMainAddress: isMainAddress,
-          fullAddress: fullAddress,
-          label: label,
-          latitude: latitude,
-          longitude: longitude,
-          street: street,);
-
-      return true;
-    } catch (e) {
-      return false;
+  @override
+  void notifyListeners() {
+    if (!isDisposed) {
+      super.notifyListeners();
     }
   }
 
-  Future<bool> getMyAddress() async {
-    try {
-      AddressModels myAddress = await AddressService().getMainAddress();
-      _address = myAddress;
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<void> getAllAddress() async {
-    try {
-      List<AddressModels> listAddress = await AddressService().getAllAddress();
-      _listAddress = listAddress;
-      print(_listAddress);
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  changeMainAaddress(AddressModels address) {
-    try {
-      myAddress = address;
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<bool> changeToDabase(int? id) async {
-    try {
-      AddressModels myAddress = await AddressService().changeMainAddress(id);
-      _address = myAddress;
-
-      return true;
-    } catch (e) {
-      return false;
-    }
+  @override
+  void dispose() {
+    isDisposed = true;
+    super.dispose();
   }
 }

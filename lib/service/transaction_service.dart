@@ -22,9 +22,8 @@ class transactionService {
     var queryParameters = {'q': '{http}'};
 
     var url = Uri.http(
-        baseUrl, '/freshmarket/public/api/v1/transaction', queryParameters);
+        baseUrl, '/api/v1/transaction', queryParameters);
     var response = await http.get(url, headers: headers);
-    print(response.body);
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body)['data'];
